@@ -14,24 +14,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/helveticaneue"
-        android:text="hola"
+        android:text="Hola"
         android:textColor="@color/secondary_dark"
         android:textFontWeight="800"
-        android:textSize="20dp"
-        />
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/bubble_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/helveticaneue"
-        android:text="Paerces estar un poco estresado."
-        android:textColor="#FF444444"
-        android:textSize="38dp"
-        android:textFontWeight="800"
         android:paddingTop="10dp"
         android:paddingBottom="25dp"
-        />
+        android:text="Pareces estar un poco estresado."
+        android:textColor="#FF444444"
+        android:textFontWeight="800"
+        android:textSize="38dp" />
 
     <TextView
         android:id="@+id/bubble_subtitle"

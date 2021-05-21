@@ -19,4 +19,12 @@
     <color name="blue_light">#FFF4F5FE</color>
     <color name="blue_light_selected">#FFE1E4FF</color>
 
+    <!-- colores de status -->
+    <color name="red">#FFFF8078</color>
+    <color name="orange">#FFFFB978</color>
+    <color name="yellow">#FFFFD978</color>
+    <color name="green">#FF7FECB7</color>
+    <color name="light">#FFF7F7F7</color>
+
+
 </resources>

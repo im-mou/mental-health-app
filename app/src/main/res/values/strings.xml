@@ -3,4 +3,7 @@
     <string name="title_home">Inicio</string>
     <string name="title_dashboard">Mood Journal</string>
     <string name="title_notifications">Calendario</string>
+    <string name="grabar">grabar</string>
+    <string name="parar">parar</string>
+    <string name="state">Estado de la Grabacion</string>
 </resources>

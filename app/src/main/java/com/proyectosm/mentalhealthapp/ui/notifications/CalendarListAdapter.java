@@ -34,7 +34,7 @@ public class CalendarListAdapter extends ArrayAdapter {
         LayoutInflater inflater = context.getLayoutInflater();
 
         if(convertView==null)
-            row = inflater.inflate(R.layout.calendar_list_item, parent, true);
+            row = inflater.inflate(R.layout.calendar_list_item, null, true);
 
         TextView textViewDate = (TextView) row.findViewById(R.id.cal_date);
         TextView textViewColor = (TextView) row.findViewById(R.id.cal_color);

@@ -12,7 +12,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
 
+import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
 import com.proyectosm.mentalhealthapp.ui.dashboard.DashboardFragment;
+import com.proyectosm.mentalhealthapp.ui.dashboard.NewDashboard;
 import com.proyectosm.mentalhealthapp.ui.home.HomeFragment;
 import com.proyectosm.mentalhealthapp.ui.notifications.NotificationsFragment;
 
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(menuItem.getItemId() == R.id.navigation_dashboard)
                 {
-                    showSelectedFragment(new DashboardFragment());
+                    showSelectedFragment(new NewDashboard());
                 }
 
                 if(menuItem.getItemId() == R.id.navigation_notifications)

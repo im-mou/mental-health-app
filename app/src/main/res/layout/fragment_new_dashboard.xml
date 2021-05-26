@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.dashboard.NewDashboard">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
@@ -17,7 +17,7 @@
             android:layout_toStartOf="@id/button"
             android:layout_marginEnd="15dp"
             android:padding="10dp"
-            android:hint="@string/tap_to_speak"
+            android:hint="Tap to Speak"
             android:id="@+id/text"
             android:layout_centerInParent="true"
             />
@@ -26,26 +26,12 @@
             android:layout_height="40dp"
             android:backgroundTint="#F9F8FA"
             android:paddingEnd="10dp"
-            android:paddingStart="10dp"
             android:src="@drawable/ic_white_mic"
             android:layout_alignParentEnd="true"
             android:id="@+id/button"/>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/state"
-        android:layout_width="189dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="302dp"
-        android:layout_marginEnd="109dp"
-        android:layout_marginBottom="410dp"
-        android:text="@string/waiting"
-        android:textAlignment="center" />
 
 
 </RelativeLayout>
+

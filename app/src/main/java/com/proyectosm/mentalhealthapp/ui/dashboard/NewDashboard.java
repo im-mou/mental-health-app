@@ -1,6 +1,7 @@
 package com.proyectosm.mentalhealthapp.ui.dashboard;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -12,50 +13,49 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.melnykov.fab.FloatingActionButton;
-import com.proyectosm.mentalhealthapp.R;
-import com.proyectosm.mentalhealthapp.Service.RecordingService;
-import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
 
-import java.io.File;
+import com.proyectosm.mentalhealthapp.R;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-public class DashboardFragment extends Fragment {
+public class NewDashboard extends Fragment {
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private EditText editText;
+    private TextView stateText;
     private ImageView micButton;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        return inflater.inflate(R.layout.fragment_new_dashboard, container, false);
+    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-        if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+    public void onStart() {
+        super.onStart();
+        //getActivity().setContentView(R.layout.activity_main);
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) !=
+                PackageManager.PERMISSION_GRANTED){
             checkPermission();
         }
 
-        editText = getActivity().findViewById(R.id.text);
-        micButton = getActivity().findViewById(R.id.button);
+        editText = getView().findViewById(R.id.text);
+        stateText = getView().findViewById(R.id.state);
+        micButton = getView().findViewById(R.id.button);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -72,6 +72,7 @@ public class DashboardFragment extends Fragment {
             public void onBeginningOfSpeech() {
                 editText.setText("");
                 editText.setHint("Listening...");
+                stateText.setText("Escuchando");
             }
 
             @Override
@@ -86,7 +87,7 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onEndOfSpeech() {
-
+                stateText.setText("Esperando Voz");
             }
 
             @Override
@@ -125,8 +126,6 @@ public class DashboardFragment extends Fragment {
                 return false;
             }
         });
-
-
     }
 
     @Override
@@ -146,7 +145,7 @@ public class DashboardFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(getActivity(),"Permission Granted",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
         }
     }
 }

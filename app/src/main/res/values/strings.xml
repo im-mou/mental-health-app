@@ -6,4 +6,8 @@
     <string name="grabar">grabar</string>
     <string name="parar">parar</string>
     <string name="state">Estado de la Grabacion</string>
+    <string name="micro">Micro</string>
+    <string name="text_here">Text here...</string>
+    <string name="tap_to_speak">Tap to Speak</string>
+    <string name="waiting">Esperando Voz</string>
 </resources>

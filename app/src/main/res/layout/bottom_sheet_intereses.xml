@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_layout"
+    android:padding="30dp"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_button_edit_interests"
+        android:textSize="30sp"
+        android:background="@drawable/bottom_sheet_layout"
+        />
+
+
+    <ListView
+        android:id="@+id/my_interests_list"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginTop="40dp"
+        android:divider="@null"
+        android:dividerHeight="20sp" />
+
+    <Button
+        android:id="@+id/interest_btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/update"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        />
+
+
+</LinearLayout>

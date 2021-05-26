@@ -3,11 +3,17 @@
     <string name="title_home">Inicio</string>
     <string name="title_dashboard">Mood Journal</string>
     <string name="title_notifications">Calendario</string>
-    <string name="grabar">grabar</string>
-    <string name="parar">parar</string>
-    <string name="state">Estado de la Grabacion</string>
-    <string name="micro">Micro</string>
-    <string name="text_here">Text here...</string>
-    <string name="tap_to_speak">Tap to Speak</string>
-    <string name="waiting">Esperando Voz</string>
+    <string name="journal_details">DETALLE DEL JOURNAL</string>
+    <string name="title_settings">Ajustes</string>
+
+    <string name="settings_label_name">Cambiar nombre</string>
+    <string name="settings_label_change_sleep_hour">Hora para dormir</string>
+    <string name="settings_button_disable_notif">Desactivar Notificaciones</string>
+    <string name="settings_button_edit_interests">Editar mi intereses</string>
+    <string name="update">Actualizar</string>
+
+
+
+
+
 </resources>

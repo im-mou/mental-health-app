@@ -12,50 +12,90 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.melnykov.fab.FloatingActionButton;
 import com.proyectosm.mentalhealthapp.R;
-import com.proyectosm.mentalhealthapp.Service.RecordingService;
 import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class DashboardFragment extends Fragment {
+
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
-    private EditText editText;
-    private ImageView micButton;
+    private Button btnRespuesta;
+    private TextView stateGrabacion;
+
+
+    private DashboardViewModel dashboardViewModel;
+    private FragmentDashboardBinding binding;
+
+    private ChatModel chatrecord[] = {
+            new ChatModel("Question 1", true),
+            new ChatModel("Answer 1: aksldjf laksjdf lasjdfl kjadhsf lkjsdhfla kjdshf lakjsd hfalksjd fh", false),
+            new ChatModel("Question 2", true),
+            new ChatModel("Answer 2: asdkfh alksjdhf lkjasdhf lakjsdhf lakjsd hflaskjd hflaksjdfhlakjdshfa", false),
+            new ChatModel("Question 3", true),
+            new ChatModel("Answer 3: asdfkalsjkd hfalkjsd hkjas dhfkajsdf lkahsdfl kajshf", false),
+            new ChatModel("Question 4", true),
+            new ChatModel("Answer 4: asdflkjasldkfhalksjd ihfakjhf jklashfl kjadhfl akjhdfljk ahsdfl kjahdlfk jhasldkjf haljdkhf", false),
+    };
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+
+
+        ListView listView = (ListView) root.findViewById(R.id.chat_container);
+
+        // Construct the data source
+        ArrayList<ChatModel> arrayOfChatEntries = new ArrayList<ChatModel>();
+
+        // For populating list data
+        ChatListAdapter chatsListAdapter = new ChatListAdapter(getActivity(), arrayOfChatEntries);
+        listView.setAdapter(chatsListAdapter);
+
+        chatsListAdapter.addAll(chatrecord);
+
+
+
+//        final TextView textView = binding.textDashboard;
+//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
+
+        return root;
+    }
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-        if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+    public void onStart() {
+        super.onStart();
+        //getActivity().setContentView(R.layout.activity_main);
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) !=
+                PackageManager.PERMISSION_GRANTED){
             checkPermission();
         }
 
-        editText = getActivity().findViewById(R.id.text);
-        micButton = getActivity().findViewById(R.id.button);
+        stateGrabacion = getView().findViewById(R.id.estadoGrabacion);
+        btnRespuesta = getView().findViewById(R.id.botonRespuesta);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -70,8 +110,8 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onBeginningOfSpeech() {
-                editText.setText("");
-                editText.setHint("Listening...");
+                stateGrabacion.setText("");
+                stateGrabacion.setHint("Grabando tu voz...");
             }
 
             @Override
@@ -86,7 +126,7 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onEndOfSpeech() {
-
+                stateGrabacion.setText("Esperando Voz");
             }
 
             @Override
@@ -96,9 +136,8 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onResults(Bundle bundle) {
-                micButton.setImageResource(R.drawable.ic_white_mic);
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                editText.setText(data.get(0));
+                stateGrabacion.setText(data.get(0));
             }
 
             @Override
@@ -112,21 +151,18 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        micButton.setOnTouchListener(new View.OnTouchListener() {
+        btnRespuesta.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     speechRecognizer.stopListening();
                 }
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    micButton.setImageResource(R.drawable.ic_white_mic);
                     speechRecognizer.startListening(speechRecognizerIntent);
                 }
                 return false;
             }
         });
-
-
     }
 
     @Override
@@ -146,7 +182,13 @@ public class DashboardFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(getActivity(),"Permission Granted",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

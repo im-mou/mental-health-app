@@ -9,7 +9,6 @@
     >
 
     <TextView
-
         android:id="@+id/interest_listitem_title"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -20,13 +19,16 @@
         />
 
 
+
     <CheckBox
         android:id="@+id/interest_listitem_checked"
-        android:layout_width="80dp"
-        android:padding="20dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
+        android:paddingEnd="10sp"
+        android:paddingStart="0sp"
 
+        android:layout_gravity="center"
         />
 
 

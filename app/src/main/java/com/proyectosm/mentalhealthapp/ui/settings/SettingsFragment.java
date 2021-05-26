@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.proyectosm.mentalhealthapp.databinding.FragmentSettingsBinding;
-import com.proyectosm.mentalhealthapp.ui.notifications.CalendarDetailBottomSheet;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,7 +29,13 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final Button editInterests = (Button) binding.settingsBtnEditInterests;
+        final TextInputLayout name = binding.settingsInputChangeName;
+        final TextInputLayout sleepHours = binding.settingsInputChangeSleepHour;
+        final Button disableNotifications = binding.settingBtnDisableNotifications;
+        final Button editInterests = binding.settingsBtnEditInterests;
+
+
+
 
         editInterests.setOnClickListener(new AdapterView.OnClickListener() {
             @Override

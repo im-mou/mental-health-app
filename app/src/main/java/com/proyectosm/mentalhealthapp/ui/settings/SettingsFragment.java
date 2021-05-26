@@ -36,7 +36,6 @@ public class SettingsFragment extends Fragment {
 
 
 
-
         editInterests.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View v) {

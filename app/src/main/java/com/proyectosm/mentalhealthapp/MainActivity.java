@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
         Fresco.initialize(this);
 //        FirebaseApp.initializeApp(this);
 
-        int a = 1;
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

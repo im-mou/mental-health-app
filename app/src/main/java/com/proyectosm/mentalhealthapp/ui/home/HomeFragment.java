@@ -62,6 +62,7 @@ public class HomeFragment extends Fragment {
         RecomendationListAdapter recomendationList = new RecomendationListAdapter(getActivity(), rec_title, rec_description, rec_images);
         listView.setAdapter(recomendationList);
 
+
         return root;
     }
 

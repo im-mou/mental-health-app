@@ -1,51 +1,72 @@
 package com.proyectosm.mentalhealthapp.ui.notifications;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.proyectosm.mentalhealthapp.DatesUtils;
 import com.proyectosm.mentalhealthapp.R;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import androidx.core.content.ContextCompat;
 
-public class CalendarListAdapter extends ArrayAdapter {
-    private Integer[] dates;
-    private int[] sentiment_color;
+public class CalendarListAdapter extends ArrayAdapter<CalendarModel> {
     private Activity context;
-    private int currentday;
+    private ArrayList<CalendarModel> calendar;
 
 
-    public CalendarListAdapter(Activity context, Integer[] dates, int[] sentiment_color, int currentday) {
-        super(context, R.layout.calendar_list_item, dates);
+    public CalendarListAdapter(Activity context, ArrayList<CalendarModel> calendar) {
+        super(context, R.layout.calendar_list_item, calendar);
         this.context = context;
-        this.dates = dates;
-        this.sentiment_color = sentiment_color;
-        this.currentday = currentday;
+        this.calendar = calendar;
 
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View row = convertView;
-        LayoutInflater inflater = context.getLayoutInflater();
+        // Get the data item for this position
+        CalendarModel calendar = getItem(position);
 
-        if(convertView==null)
-            row = inflater.inflate(R.layout.calendar_list_item, parent, true);
-
-        TextView textViewDate = (TextView) row.findViewById(R.id.cal_date);
-        TextView textViewColor = (TextView) row.findViewById(R.id.cal_color);
-
-        textViewDate.setText(dates[position].toString());
-        textViewColor.setBackgroundColor(ContextCompat.getColor(this.context, sentiment_color[position]));
-
-        if(dates[position] == this.currentday){
-            row.setBackground(ContextCompat.getDrawable(this.context, R.drawable.calendar_color_rectangle));
+        // Check if an existing view is being reused, otherwise inflate the view
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.calendar_list_item, null, false);
         }
 
-        return row;
+        // Lookup view for data population
+        TextView textViewDate = (TextView) convertView.findViewById(R.id.cal_date);
+        TextView textViewColor = (TextView) convertView.findViewById(R.id.cal_color);
+
+        // Populate the data into the template view using the data object
+        String dateDay = new DatesUtils(calendar.date).getDay();
+
+        textViewDate.setText(String.valueOf(dateDay));
+        textViewColor.setBackgroundColor(Color.parseColor(calendar.color));
+
+        if(Integer.parseInt(dateDay)  == LocalDate.now().getDayOfMonth()) {
+            convertView.setBackground(ContextCompat.getDrawable(this.context, R.drawable.calendar_color_rectangle));
+        } else {
+            convertView.setBackground(null);
+        }
+
+        if(calendar.sentiment_index == 0 && position + 1  < LocalDate.now().getDayOfMonth()) {
+            textViewColor.setText("Vacío");
+        } else {
+            textViewColor.setText("");
+            //textViewColor.setText(String.valueOf(calendar.sentiment_index));
+        }
+
+        // Return the completed view to render on screen
+        return convertView;
+
     }
+
+
 }
+

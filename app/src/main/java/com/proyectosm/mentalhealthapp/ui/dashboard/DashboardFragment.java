@@ -13,23 +13,21 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.proyectosm.mentalhealthapp.R;
-import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
-
-import java.util.ArrayList;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.proyectosm.mentalhealthapp.R;
+import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class DashboardFragment extends Fragment {
 
@@ -38,19 +36,18 @@ public class DashboardFragment extends Fragment {
     private Button btnRespuesta;
     private TextView stateGrabacion;
 
-
     private DashboardViewModel dashboardViewModel;
     private FragmentDashboardBinding binding;
 
     private ChatModel chatrecord[] = {
             new ChatModel("Question 1", true),
-            new ChatModel("Answer 1: aksldjf laksjdf lasjdfl kjadhsf lkjsdhfla kjdshf lakjsd hfalksjd fh", false),
+            new ChatModel("Answer 1: Lorem Ipsum is simply dummy text of the printing and typesetting industry.", false),
             new ChatModel("Question 2", true),
-            new ChatModel("Answer 2: asdkfh alksjdhf lkjasdhf lakjsdhf lakjsd hflaskjd hflaksjdfhlakjdshfa", false),
+            new ChatModel("Answer 2: orem Ipsum has been the industry's standard dummy text ever since the 1500s", false),
             new ChatModel("Question 3", true),
-            new ChatModel("Answer 3: asdfkalsjkd hfalkjsd hkjas dhfkajsdf lkahsdfl kajshf", false),
+            new ChatModel("Answer 3: when an unknown printer took a galley of type and scrambled it to make a type specimen book", false),
             new ChatModel("Question 4", true),
-            new ChatModel("Answer 4: asdflkjasldkfhalksjd ihfakjhf jklashfl kjadhfl akjhdfljk ahsdfl kjahdlfk jhasldkjf haljdkhf", false),
+            new ChatModel("Answer 4: It has survived not only five centuries, but also the leap into electronic typesetting", false),
     };
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,16 +68,6 @@ public class DashboardFragment extends Fragment {
 
         chatsListAdapter.addAll(chatrecord);
 
-
-
-//        final TextView textView = binding.textDashboard;
-//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
-
         return root;
     }
 
@@ -88,26 +75,32 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //getActivity().setContentView(R.layout.activity_main);
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) !=
                 PackageManager.PERMISSION_GRANTED){
             checkPermission();
         }
 
+        // Variables principales del layout
         stateGrabacion = getView().findViewById(R.id.estadoGrabacion);
         btnRespuesta = getView().findViewById(R.id.botonRespuesta);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
+        // Se realiza un Intent para llamar al Speech Recognizer
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+        // Se le indica como info extra en el intent que se habla de forma natural y que el idioma
+        // de introducción será el local (en este caso español)
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
+        // Según cómo reaccione el bot, se realizan diferentes cosas
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle bundle) {
 
             }
 
+            // Cuando empieza a detectar texto borra y escribe una frase para informar al usuario
             @Override
             public void onBeginningOfSpeech() {
                 stateGrabacion.setText("");
@@ -134,6 +127,7 @@ public class DashboardFragment extends Fragment {
 
             }
 
+            // Cuando el Speech Recognition termina de detectar palabras las escribe en la barra
             @Override
             public void onResults(Bundle bundle) {
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -151,12 +145,17 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        // La función se lanza cuando se pone el dedo sobre el botón de grabar
         btnRespuesta.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                // Al soltar el dedo finaliza
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     speechRecognizer.stopListening();
                 }
+
+                // Al pulsar el boton inicia
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
                     speechRecognizer.startListening(speechRecognizerIntent);
                 }
@@ -171,16 +170,20 @@ public class DashboardFragment extends Fragment {
         speechRecognizer.destroy();
     }
 
+    // Pregunta si hay permisos de grabación
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
         }
     }
 
+    // Si no tiene permisos, los pide
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
+
+            // Operacion exitosa
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(getContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
         }

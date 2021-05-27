@@ -1,5 +1,8 @@
 package com.proyectosm.mentalhealthapp;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -16,9 +19,6 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-
-    //private FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
-    //private DatabaseReference reference = FirebaseDatabase.getInstance().getReference("/usuarios");
 
     DatabaseReference connectedRef;
 
@@ -40,6 +40,18 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+
+        // en esta parte comprobamos si existe el token para identificar al usuairio,
+        // En el caso de que no exista el token, redirigimos al usuairo a la paginas para el registro
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
+        if(token == "") {
+            Intent intent = new Intent(MainActivity.this, InitialconfigActivity.class);
+            startActivity(intent);
+        }
+
 
     }
 

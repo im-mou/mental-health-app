@@ -12,6 +12,16 @@
     <string name="settings_button_edit_interests">Editar mi intereses</string>
     <string name="update">Actualizar</string>
 
+    <string name="user_token">com.proyectosm.mentalhealthapp.user_token</string>
+
+    <string name="initial_label_name">Nombre y aplellido</string>
+    <string name="initial_start">Empezar</string>
+
+    <string name="api_url">http://mental-health.mohsinriaz.es/api/v1</string>
+
+
+
+
 
 
 

@@ -30,16 +30,19 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class DashboardFragment extends Fragment {
-
+    // Variables necesarias para la captación de audio
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private Button btnRespuesta;
     private TextView stateGrabacion;
 
+    // Variables para la muestra del chat por pantalla
     private DashboardViewModel dashboardViewModel;
     private FragmentDashboardBinding binding;
 
+    // Chat de ejemplo
     private ChatModel chatrecord[] = {
+            // Se crean diversas instancias de ChatModel y luego se cargan dentro de chatsListAdapter
             new ChatModel("Question 1", true),
             new ChatModel("Answer 1: Lorem Ipsum is simply dummy text of the printing and typesetting industry.", false),
             new ChatModel("Question 2", true),
@@ -59,10 +62,10 @@ public class DashboardFragment extends Fragment {
 
         ListView listView = (ListView) root.findViewById(R.id.chat_container);
 
-        // Construct the data source
+        // Construye la fuente de los datos
         ArrayList<ChatModel> arrayOfChatEntries = new ArrayList<ChatModel>();
 
-        // For populating list data
+        // Recibe los chatModels y carga los datos
         ChatListAdapter chatsListAdapter = new ChatListAdapter(getActivity(), arrayOfChatEntries);
         listView.setAdapter(chatsListAdapter);
 
@@ -75,6 +78,8 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        //Cuando comienza, chequea si se tienen permisos para grabar y si no es el caso los pide
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) !=
                 PackageManager.PERMISSION_GRANTED){
             checkPermission();
@@ -170,14 +175,14 @@ public class DashboardFragment extends Fragment {
         speechRecognizer.destroy();
     }
 
-    // Pregunta si hay permisos de grabación
+    // Pide permisos de grabación
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
         }
     }
 
-    // Si no tiene permisos, los pide
+    // Recoge los resultados de la petición y lo muestra por pantalla si se han dado
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

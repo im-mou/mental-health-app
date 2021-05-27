@@ -66,46 +66,40 @@ public class InitialconfigActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postUserData();
+                client = new OkHttpClient();
+                RequestBody formBody = new FormBody.Builder()
+                        .add("name", "holaaaa")
+                        .add("interest", "1|2|5")
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(getResources().getString(R.string.api_url)+"/user/register")
+                        .post(formBody)
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+
+                    Log.d("ajax", response.body().string());
+
+
+                    Gson gson = new Gson();
+                    TokenModel jsonData = gson.fromJson(response.body().string(), TokenModel.class);
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("token", jsonData.getToken());
+
+                    nameTextVIew.getEditText().setText(jsonData.getToken());
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
-    }
-
-    public void postUserData() {
-
-        client = new OkHttpClient();
-        RequestBody formBody = new FormBody.Builder()
-                .add("name", "holaaaa")
-                .add("interest", "1|2|5")
-                .build();
-
-        Request request = new Request.Builder()
-                .url(getResources().getString(R.string.api_url)+"/user/register")
-                .post(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            System.out.println(response.body().string());
-
-            Log.d("ajax", response.body().string());
-
-
-            Gson gson = new Gson();
-            TokenModel jsonData = gson.fromJson(response.body().string(), TokenModel.class);
-
-            SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("token", jsonData.getToken());
-
-            nameTextVIew.getEditText().setText(jsonData.getToken());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

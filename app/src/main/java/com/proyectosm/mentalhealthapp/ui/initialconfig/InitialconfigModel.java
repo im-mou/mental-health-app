@@ -14,6 +14,10 @@ public class InitialconfigModel extends ViewModel {
         minterests.setValue(interests);
     }
 
+    public void setMinterests(MutableLiveData<InterestsModel[]> minterests) {
+        this.minterests = minterests;
+    }
+
     public InitialconfigModel() {
         minterests = new MutableLiveData<>();
     }
@@ -21,4 +25,5 @@ public class InitialconfigModel extends ViewModel {
     public LiveData<InterestsModel[]> getInterests() {
         return minterests;
     }
+
 }

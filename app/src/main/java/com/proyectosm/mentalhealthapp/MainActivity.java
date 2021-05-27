@@ -6,7 +6,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
+
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
+import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -25,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     public static final String CHANNEL_ID = "MH_App";
+
 
     DatabaseReference connectedRef;
 
@@ -49,6 +61,21 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         // Inicializa los parámetros para recibir notificaciones
+
+        // en esta parte comprobamos si existe el token para identificar al usuairio,
+        // En el caso de que no exista el token, redirigimos al usuairo a la paginas para el registro
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "defaultValue");
+
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("token", "");
+//        editor.apply();
+
+        if (token == "") {
+            Intent intent = new Intent(MainActivity.this, InitialconfigActivity.class);
+            startActivity(intent);
+        }
+
         CreateNotificationChannel(); // crear el canal de notificaciones
         setNotifications(22, 0, 0, 55);
     }

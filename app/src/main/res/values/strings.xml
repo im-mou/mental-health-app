@@ -14,6 +14,7 @@
     <string name="chat_value">Hoy es 10 Noviembre</string>
     <string name="chat_button">Responder</string>
 
+
     <string name="user_token">com.proyectosm.mentalhealthapp.user_token</string>
     <string name="initial_label_name">Nombre y aplellido</string>
     <string name="initial_start">Empezar</string>

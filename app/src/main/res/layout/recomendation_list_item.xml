@@ -22,7 +22,7 @@
             android:cropToPadding="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            fresco:placeholderImage="@drawable/bubble" />
+            />
 
     </androidx.cardview.widget.CardView>
 

@@ -6,7 +6,7 @@
     android:layout_alignParentTop="true"
     android:orientation="vertical"
     android:paddingHorizontal="40dp"
-    android:paddingVertical="40dp"
+    android:paddingVertical="30dp"
     android:background="@drawable/bubble">
 
     <TextView
@@ -27,10 +27,10 @@
         android:fontFamily="@font/helveticaneue"
         android:text="Paerces estar un poco estresado."
         android:textColor="#FF444444"
-        android:textSize="38dp"
+        android:textSize="28dp"
         android:textFontWeight="800"
         android:paddingTop="10dp"
-        android:paddingBottom="25dp"
+        android:paddingBottom="20dp"
         />
 
     <TextView

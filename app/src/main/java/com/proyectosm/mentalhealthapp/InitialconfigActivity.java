@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -88,6 +89,8 @@ public class InitialconfigActivity extends AppCompatActivity {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             System.out.println(response.body().string());
+
+            Log.d("ajax", response.body().string());
 
 
             Gson gson = new Gson();

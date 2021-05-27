@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // en esta parte comprobamos si existe el token para identificar al usuairio,
         // En el caso de que no exista el token, redirigimos al usuairo a la paginas para el registro
         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "defaultValue");
+        String token = sharedPreferences.getString("token", "");
 
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putString("token", "");

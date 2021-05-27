@@ -16,6 +16,7 @@ public class CalendarDetailListAdapter extends ArrayAdapter<JournalModel> {
     private Activity context;
     private ArrayList<JournalModel> journal;
 
+    // Función para los datos más detallados del calendario (al pulsar un boton de color)
     public CalendarDetailListAdapter(Activity context, ArrayList<JournalModel> journal) {
         super(context, R.layout.calendar_details_list_item, journal);
         this.context = context;
@@ -24,28 +25,23 @@ public class CalendarDetailListAdapter extends ArrayAdapter<JournalModel> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        // Get the data item for this position
         JournalModel journal = getItem(position);
 
-        // Check if an existing view is being reused, otherwise inflate the view
+        // Mira si se está reusando una vista, sino llama a la función inflate
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.calendar_details_list_item, null, false);
         }
 
-        // Lookup view for data population
+        // Enlaza los botones locales a los items del layout
         TextView textViewQuestion = (TextView) convertView.findViewById(R.id.cal_detail_item_title);
         TextView textViewAnswer = (TextView) convertView.findViewById(R.id.cal_detail_item_text);
 
-        // Populate the data into the template view using the data object
+        // Rellena la lista de datos según los objetos que se le pasan
         textViewQuestion.setText(journal.question);
         textViewAnswer.setText(journal.answer);
 
-
-        // Return the completed view to render on screen
+        // Devuelve la vista
         return convertView;
 
     }
-
-
 }

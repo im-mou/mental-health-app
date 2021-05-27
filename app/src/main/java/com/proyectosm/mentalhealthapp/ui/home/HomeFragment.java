@@ -16,22 +16,23 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class HomeFragment extends Fragment {
 
+    // Variables principales de la vista del home
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-
     private ListView listView;
+
+    // Actividades de ejemplo, sus descripciones e iconos
     private String rec_title[] = {
-            "Título actividad 1",
-            "Título actividad 2",
-            "Título actividad 3",
+            "Netflix",
+            "Meditación",
+            "Haz un poco de ejercicio",
     };
 
     private String rec_description[] = {
-            "Descripción de la actividad 1, y lo que debe hacer...",
-            "Descripción de la actividad 2, y lo que debe hacer...",
-            "Descripción de la actividad 3, y lo que debe hacer...",
+            "¿Qué tal si descansas un poco y ves una de estas series...?\n",
+            "Estas técnicas de meditación seguro que te ayudan a calmarte...",
+            "Hacer ejercicio te puede relajar",
     };
-
 
     private Uri rec_images[] = {
             Uri.parse("https://nementio.com/wp-content/uploads/netflix-new-icon.png"),
@@ -41,27 +42,15 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        /*final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
-
         ListView listView = (ListView) root.findViewById(R.id.recomendation_list);
-        //listView.addHeaderView(textView);
 
-        // For populating list data
+        // Rellena la lista de los items de ejemplo creados arriba
         RecomendationListAdapter recomendationList = new RecomendationListAdapter(getActivity(), rec_title, rec_description, rec_images);
         listView.setAdapter(recomendationList);
-
 
         return root;
     }

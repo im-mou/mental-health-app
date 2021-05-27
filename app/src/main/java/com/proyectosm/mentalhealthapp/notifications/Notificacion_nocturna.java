@@ -22,8 +22,8 @@ public class Notificacion_nocturna extends BroadcastReceiver {
 
         Notification notification = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_baseline_message_24)
-                .setContentTitle("Hola,")
-                .setContentText("te parece si hacemos el mood check diario?")
+                .setContentTitle("Buenas noches,")
+                .setContentText("te apetece explicarme como ha ido el día de hoy?")
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent)
                 .build();

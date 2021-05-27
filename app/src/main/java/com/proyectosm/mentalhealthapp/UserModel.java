@@ -8,9 +8,7 @@ public class UserModel {
     JournalModel[] journal;
     String[] intereses;
 
-    public UserModel() {
-    }
-
+    // Constructor por parámetros
     public UserModel(String name, String date, String color, float sentiment_index, JournalModel[] journal, String[] intereses) {
         this.name = name;
         this.date = date;
@@ -20,6 +18,7 @@ public class UserModel {
         this.intereses = intereses;
     }
 
+    // Funciones setters y getters
     public String getName() {
         return name;
     }

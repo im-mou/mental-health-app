@@ -36,7 +36,6 @@ public class NotificationsFragment extends Fragment {
         View root = binding.getRoot();
 
 
-//        final ListView listView = binding.calendarDatesList;
         final RecyclerView recyclerView = binding.calendarDatesList;
         final TextView title_month = binding.calTitleDate;
         final TextView title_today_date = binding.calTodayDate;
@@ -48,11 +47,6 @@ public class NotificationsFragment extends Fragment {
         CalendarRecyclerAdapter calendarRecyclerAdapter = new CalendarRecyclerAdapter(getContext(), getCalendarData(notificationsViewModel.getCurrentDate().getValue()));
         recyclerView.setAdapter(calendarRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-//        ArrayList<CalendarModel> arrayOfCalendarEntries = new ArrayList<CalendarModel>();
-//        CalendarListAdapter calendarListAdapter = new CalendarListAdapter(getActivity(), arrayOfCalendarEntries);
-//        listView.setAdapter(calendarListAdapter);
 
         // observar a los cambios de la fecha
         notificationsViewModel.getCurrentDate().observe(getViewLifecycleOwner(), new Observer<String>() {

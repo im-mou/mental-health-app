@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
+// Clase auxiliar para mostrar fechas
 public class DatesUtils {
 
     private String date;
@@ -13,6 +14,7 @@ public class DatesUtils {
     private Locale locale;
     private Date parsedDate;
 
+    // Constructor por parámetros de DatesUtils (con fecha)
     public DatesUtils(String date){
         this.date = date;
         this.locale = new Locale("es", "ES");
@@ -24,6 +26,7 @@ public class DatesUtils {
         }
     }
 
+    // Constructor por parámetros de DatesUtils (sin fecha)
     public DatesUtils(){
 
         this.locale = new Locale("es", "ES");
@@ -36,6 +39,7 @@ public class DatesUtils {
         }
     }
 
+    // Funciones getters
     public String getDay(){
         return new SimpleDateFormat("dd", this.locale).format(this.parsedDate);
     }

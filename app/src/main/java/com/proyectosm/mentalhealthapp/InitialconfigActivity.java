@@ -25,6 +25,7 @@ import okhttp3.Response;
 
 public class InitialconfigActivity extends AppCompatActivity {
 
+    // Intereses posibles de ejemplo para el usuario
     private InterestsModel interests[] = {
             new InterestsModel(1,"Interes 1", false),
             new InterestsModel(2,"Interes 2", false),
@@ -51,10 +52,10 @@ public class InitialconfigActivity extends AppCompatActivity {
 
         ListView listView = (ListView) this.findViewById(R.id.initial_interest_list);
 
-        // Construct the data source
+        // Crea los datos básicos
         ArrayList<InterestsModel> arrayOfInterestsEntries = new ArrayList<InterestsModel>();
 
-        // meter los datos a la lista de los ntereses
+        // Mete los datos a la lista de intereses
         InterestsListAdapter interestsListAdapter = new InterestsListAdapter(this, arrayOfInterestsEntries);
         listView.setAdapter(interestsListAdapter);
         interestsListAdapter.addAll(interests);
@@ -62,6 +63,7 @@ public class InitialconfigActivity extends AppCompatActivity {
         startBtn = (Button) this.findViewById(R.id.initial_start_button);
         nameTextVIew = (TextInputLayout) this.findViewById(R.id.initial_name);
 
+        // Cuando detecta un clic inicia la función postUserData
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

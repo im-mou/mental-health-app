@@ -42,40 +42,38 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         return new MyViewHolder(view);
     }
 
+    // Interpretamos la información de la lista e introducimos los elemntos en el calendario
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
-        // Populate the data into the template view using the data object
         String dateDay = new DatesUtils(calendar[position].date).getDay();
 
         holder.textViewDate.setText(String.valueOf(dateDay));
         holder.textViewColor.setBackgroundColor(Color.parseColor(calendar[position].color));
 
+        // Remarca la entrada 'hoy' poniéndole un marco de color
         if(Integer.parseInt(dateDay)  == LocalDate.now().getDayOfMonth()) {
             holder.itemView.setBackground(ContextCompat.getDrawable(this.context, R.drawable.calendar_color_rectangle));
         } else {
             holder.itemView.setBackground(null);
         }
 
+        // En función del sentiment analizado colocaría un texto
         if(calendar[position].sentiment_index == 0 && position + 1  < LocalDate.now().getDayOfMonth()) {
             holder.textViewColor.setText("Vacío");
         } else {
             holder.textViewColor.setText("");
-            //textViewColor.setText(String.valueOf(calendar.sentiment_index));
         }
 
-
+        // Al pulsar un box de una fecha inicia una ventana flotante dando información del día
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 CalendarModel CalendarEntry = calendar[position];
 
                 FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
 
                 CalendarDetailBottomSheet sheet = new CalendarDetailBottomSheet(position, CalendarEntry);
                 sheet.show(manager, "calender_detail_sheet");
-
-
             }
         });
     }
@@ -86,8 +84,6 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        // Lookup view for data population
         TextView textViewDate, textViewColor;
         View view;
 

@@ -9,20 +9,15 @@
     android:layout_marginBottom="60dp"
     tools:context=".ui.dashboard.DashboardFragment">
 
-
-
-
     <ListView
         android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:id="@+id/chat_container"
         android:divider="@null"
         android:dividerHeight="20dp"
         />
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,21 +26,28 @@
         android:background="@color/light"
         android:orientation="horizontal">
 
-        <TextView
+        <EditText
             android:id="@+id/estadoGrabacion"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Hoy es 24 de mayo"
-            android:textColor="#FF999999"
             android:padding="10dp"
-            />
+            android:text="@string/chat_value"
+            android:textColor="#FF999999" />
 
-        <Button
-            android:id="@+id/botonRespuesta"
+        <ImageButton
+            android:id="@+id/botonMicro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Responder" />
+            android:backgroundTint="#5ACA53" />
+
+        <ImageButton
+            android:id="@+id/botonEnviar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#5ACA53"
+            android:onClick="" />
+
 
     </LinearLayout>
 </LinearLayout>

@@ -12,9 +12,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,8 +33,9 @@ public class DashboardFragment extends Fragment {
     // Variables necesarias para la captación de audio
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
-    private Button btnRespuesta;
-    private TextView stateGrabacion;
+    private ImageButton btnMicro;
+    private ImageButton btnEnviar;
+    private EditText stateGrabacion;
 
     // Variables para la muestra del chat por pantalla
     private DashboardViewModel dashboardViewModel;
@@ -43,22 +44,22 @@ public class DashboardFragment extends Fragment {
     // Chat de ejemplo
     private ChatModel chatrecord[] = {
             // Se crean diversas instancias de ChatModel y luego se cargan dentro de chatsListAdapter
-            new ChatModel("Question 1", true),
-            new ChatModel("Answer 1: Lorem Ipsum is simply dummy text of the printing and typesetting industry.", false),
-            new ChatModel("Question 2", true),
-            new ChatModel("Answer 2: orem Ipsum has been the industry's standard dummy text ever since the 1500s", false),
-            new ChatModel("Question 3", true),
-            new ChatModel("Answer 3: when an unknown printer took a galley of type and scrambled it to make a type specimen book", false),
-            new ChatModel("Question 4", true),
-            new ChatModel("Answer 4: It has survived not only five centuries, but also the leap into electronic typesetting", false),
+            new ChatModel("¿Cómo te has sentido al despertarte?", true),
+            new ChatModel("Lorem Ipsum is simply dummy text of the printing and typesetting industry.", false),
+            new ChatModel("¿Avanzaste mucho en tus proyectos ayer? ¿Por qué?", true),
+            new ChatModel("When an unknown printer took a galley of type and scrambled it to make a type specimen book", false),
+            new ChatModel("¿Cómo crees que te irá el día hoy?", true),
+            new ChatModel("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s", false),
+            new ChatModel("¿Te sientes con seguridad en tu sitio de trabajo? ¿Y por qué?", true),
+            new ChatModel("It has survived not only five centuries, but also the leap into electronic typesetting", false),
+            new ChatModel("¿Has estado relajado/a hoy?", true),
+            new ChatModel("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.", false),
     };
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-
 
         ListView listView = (ListView) root.findViewById(R.id.chat_container);
 
@@ -87,7 +88,10 @@ public class DashboardFragment extends Fragment {
 
         // Variables principales del layout
         stateGrabacion = getView().findViewById(R.id.estadoGrabacion);
-        btnRespuesta = getView().findViewById(R.id.botonRespuesta);
+        btnMicro = getView().findViewById(R.id.botonMicro);
+        btnMicro.setImageResource(R.drawable.ic_mic);
+        btnEnviar = getView().findViewById(R.id.botonEnviar);
+        btnEnviar.setImageResource(R.drawable.ic_send);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
 
         // Se realiza un Intent para llamar al Speech Recognizer
@@ -97,6 +101,8 @@ public class DashboardFragment extends Fragment {
         // de introducción será el local (en este caso español)
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+
 
         // Según cómo reaccione el bot, se realizan diferentes cosas
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -151,7 +157,7 @@ public class DashboardFragment extends Fragment {
         });
 
         // La función se lanza cuando se pone el dedo sobre el botón de grabar
-        btnRespuesta.setOnTouchListener(new View.OnTouchListener() {
+        btnMicro.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -190,7 +196,7 @@ public class DashboardFragment extends Fragment {
 
             // Operacion exitosa
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(getContext(),"Permission Granted",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Permiso concedido",Toast.LENGTH_SHORT).show();
         }
     }
 

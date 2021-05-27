@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bubble"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:orientation="vertical"
+    android:paddingHorizontal="40dp"
+    android:paddingVertical="30dp"
+    android:background="@drawable/bubble">
+
+    <TextView
+        android:id="@+id/bubble_pretitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/helveticaneue"
+        android:text="Bienvenido"
+        android:textColor="@color/secondary_dark"
+        android:textFontWeight="800"
+        android:textSize="20dp"
+        />
+
+    <TextView
+        android:id="@+id/bubble_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/helveticaneue"
+        android:text="Empieza tu mood tracker en unos pasos"
+        android:textColor="#FF444444"
+        android:textSize="28dp"
+        android:textFontWeight="800"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp"
+        />
+    
+</LinearLayout>

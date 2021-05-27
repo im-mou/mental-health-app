@@ -26,4 +26,20 @@ public class InitialconfigModel extends ViewModel {
         return minterests;
     }
 
+    // obtenemos una cadena con las ids de los intereses -> "1|3|9|..."
+    public String getActiveInterests() {
+
+        String activeInterests = "";
+        InterestsModel[] interests = minterests.getValue();
+
+        for (int i = 0; i < interests.length; i++) {
+            if (interests[i].isActive()){
+                activeInterests += "|" + Integer.toString(interests[i].getId());
+            }
+        }
+
+        // eliminamos el primer pipe
+        return activeInterests.substring(1);
+    }
+
 }

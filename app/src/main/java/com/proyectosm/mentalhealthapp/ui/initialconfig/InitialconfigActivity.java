@@ -75,14 +75,17 @@ public class InitialconfigActivity extends AppCompatActivity {
             }
         });
 
-
         // colocamos un listener para detectar los clicks a los intereses
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                interests[position].setActive(!interests[position].isActive());
+                // al hacer click cambiamos el estado del a "active|deactive"
+                InterestsModel[] im = initialconfigModel.getInterests().getValue();
+                im[position].setActive(!im[position].isActive());
 
+                initialconfigModel.setInterests(im);
+                interestsListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -90,15 +93,19 @@ public class InitialconfigActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String activeInterests = initialconfigModel.getActiveInterests();
+
                 RequestBody formBody = new FormBody.Builder()
-                        .add("name", "holaaaa")
-                        .add("interest", "1|2|5")
+                        .add("name", nameTextVIew.getEditText().getText().toString().trim())
+                        .add("interest", activeInterests)
                         .build();
 
                 Request request = new Request.Builder()
                         .url(getResources().getString(R.string.api_url)+"/user/register")
                         .post(formBody)
                         .build();
+
 
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);

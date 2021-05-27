@@ -2,7 +2,7 @@
     <string name="app_name">Mental Health App</string>
     <string name="title_home">Inicio</string>
     <string name="title_dashboard">Mood Journal</string>
-    <string name="title_notifications">Calendario</string>
+    <string name="title_notifications">Progreso</string>
     <string name="journal_details">DETALLE DEL JOURNAL</string>
     <string name="title_settings">Ajustes</string>
 
@@ -11,6 +11,16 @@
     <string name="settings_button_disable_notif">Desactivar Notificaciones</string>
     <string name="settings_button_edit_interests">Editar mi intereses</string>
     <string name="update">Actualizar</string>
+    <string name="chat_value">Hoy es 10 Noviembre</string>
+    <string name="chat_button">Responder</string>
+
+    <string name="user_token">com.proyectosm.mentalhealthapp.user_token</string>
+    <string name="initial_label_name">Nombre y aplellido</string>
+    <string name="initial_start">Empezar</string>
+    <string name="api_url">http://mental-health.mohsinriaz.es/api/v1</string>
+
+
+
 
 
 

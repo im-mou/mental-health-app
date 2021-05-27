@@ -24,10 +24,10 @@ public class ChatListAdapter extends ArrayAdapter<ChatModel> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        // Get the data item for this position
+        // Recupera los datos según la posición
         ChatModel chatModel = getItem(position);
 
-        // Check if an existing view is being reused, otherwise inflate the view
+        // Comprueba si hay otra view
         if (convertView == null) {
             if(chatModel.left) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_left_item, null, false);
@@ -36,13 +36,12 @@ public class ChatListAdapter extends ArrayAdapter<ChatModel> {
             }
         }
 
-        // Lookup view for data population
         TextView textViewMessage = (TextView) convertView.findViewById(R.id.chat_item);
 
-        // Populate the data into the template view using the data object
+        // Rellena la plantilla con los datos proporcionados por chatModel
         textViewMessage.setText(chatModel.text);
 
-        // Return the completed view to render on screen
+        // Devuelve la vista completa para mostrar
         return convertView;
 
     }

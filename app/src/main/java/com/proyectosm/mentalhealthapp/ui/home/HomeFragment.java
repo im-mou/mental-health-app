@@ -21,15 +21,15 @@ public class HomeFragment extends Fragment {
 
     private ListView listView;
     private String rec_title[] = {
-            "Título actividad 1",
-            "Título actividad 2",
-            "Título actividad 3",
+            "Netflix",
+            "Meditación",
+            "Haz un poco de ejercicio",
     };
 
     private String rec_description[] = {
-            "Descripción de la actividad 1, y lo que debe hacer...",
-            "Descripción de la actividad 2, y lo que debe hacer...",
-            "Descripción de la actividad 3, y lo que debe hacer...",
+            "¿Qué tal si descansas un poco y ves una de estas series...?\n",
+            "Estas técnicas de meditación seguro que te ayudan a calmarte...",
+            "Hacer ejercicio te puede relajar",
     };
 
 

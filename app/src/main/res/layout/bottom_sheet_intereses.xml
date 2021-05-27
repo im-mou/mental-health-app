@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_sheet_layout"
-    android:padding="30dp"
-    >
+    android:padding="30dp">
 
     <TextView
         android:layout_width="match_parent"

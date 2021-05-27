@@ -9,6 +9,7 @@ public class Notificacion_diurna_action extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         String message = intent.getStringExtra("emotion");
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

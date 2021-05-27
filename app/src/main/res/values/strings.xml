@@ -18,12 +18,9 @@
     <string name="initial_label_name">Nombre y aplellido</string>
     <string name="initial_start">Empezar</string>
     <string name="api_url">http://mental-health.mohsinriaz.es/api/v1</string>
-
-
-
-
-
-
+    <string name="mood">Pareces estar un poco estresado.</string>
+    <string name="recommendation">Te recomiendo los siguiente:</string>
+    <string name="hello">Buenas, {username}</string>
 
 
 </resources>

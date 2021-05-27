@@ -2,6 +2,7 @@ package com.proyectosm.mentalhealthapp.ui.notifications;
 
 import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 
+// Clase calendario
 public class CalendarModel {
     String date, color;
     float sentiment_index;

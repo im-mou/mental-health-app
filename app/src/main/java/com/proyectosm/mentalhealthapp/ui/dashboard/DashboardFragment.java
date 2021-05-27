@@ -103,6 +103,14 @@ public class DashboardFragment extends Fragment {
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
 
+        btnEnviar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //Envia a la BBDD
+            }
+        });
 
         // Según cómo reaccione el bot, se realizan diferentes cosas
         speechRecognizer.setRecognitionListener(new RecognitionListener() {

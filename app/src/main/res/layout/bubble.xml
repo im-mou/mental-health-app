@@ -14,10 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/helveticaneue"
-        android:text="Buenas, {username}"
+        android:text="@string/hello"
         android:textColor="@color/secondary_dark"
         android:textFontWeight="800"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/bubble_title"
@@ -26,19 +26,19 @@
         android:fontFamily="@font/helveticaneue"
         android:paddingTop="10dp"
         android:paddingBottom="25dp"
-        android:text="Pareces estar un poco estresado."
+        android:text="@string/mood"
         android:textColor="#FF444444"
         android:textFontWeight="800"
-        android:textSize="30dp" />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/bubble_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/helveticaneue"
-        android:text="Te recomiendo los siguiente:"
+        android:text="@string/recommendation"
         android:textColor="@color/secondary_dark"
         android:textFontWeight="800"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
 </LinearLayout>

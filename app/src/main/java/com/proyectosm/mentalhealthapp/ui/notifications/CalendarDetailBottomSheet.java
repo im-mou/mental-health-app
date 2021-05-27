@@ -16,37 +16,40 @@ import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 import java.util.ArrayList;
 
 public class CalendarDetailBottomSheet extends BottomSheetDialogFragment {
+    // Variables iniciales para crear el objeto calendario
     private int position;
     private CalendarModel calendarEntry;
 
+    // Inicializa los datos de posición y calendario
     public CalendarDetailBottomSheet(int position, CalendarModel calendarEntry) {
         super();
         this.position = position;
         this.calendarEntry = calendarEntry;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View sheetView = inflater.inflate(R.layout.bottom_sheet_detalle_calendario, null, false);
 
-
+        // Enlaza los items del layout a variables locales
         TextView textViewDetailTitle = (TextView) sheetView.findViewById(R.id.cal_detail_sheet_title);
         TextView textViewStatus = (TextView) sheetView.findViewById(R.id.cal_details_sheet_status);
-//        TextView textViewPreheader = (TextView) sheetView.findViewById(R.id.cal_detail_sheet_preheader);
 
+        // Guarda la fecha actual y la escribe en uno de los textos
         String humanDate = new DatesUtils(this.calendarEntry.date).getHumanDate();
         textViewDetailTitle.setText(humanDate);
 
-        textViewStatus.setText("Ayer estuviste to loco");
+        // Se ponen textos de ejemplo en los boxes del calendario
+        textViewStatus.setText("Ayer estabas {mood}");
+
+        // El calendario toma los colores según lo que le haya dicho el usuario
         textViewStatus.setBackgroundColor(Color.parseColor(this.calendarEntry.color));
 
-//        textViewPreheader.setTextColor(Color.parseColor(this.calendarEntry.color));
-
-
+        // Se crea la lista del calendario vacía
         ListView listView = (ListView) sheetView.findViewById(R.id.calendar_dates_list);
-        // Construct the data source
         ArrayList<JournalModel> arrayOfJournalEntries = new ArrayList<JournalModel>();
 
-        // For populating list data
+        // y se rellena de datos con las entradas que recibe
         CalendarDetailListAdapter calendarDetailListAdapter = new CalendarDetailListAdapter(getActivity(), arrayOfJournalEntries);
         listView.setAdapter(calendarDetailListAdapter);
 

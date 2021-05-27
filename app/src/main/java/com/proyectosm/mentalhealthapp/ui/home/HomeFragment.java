@@ -16,10 +16,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class HomeFragment extends Fragment {
 
+    // Variables principales de la vista del home
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-
     private ListView listView;
+
+    // Actividades de ejemplo, sus descripciones e iconos
     private String rec_title[] = {
             "Netflix",
             "Meditación",
@@ -32,7 +34,6 @@ public class HomeFragment extends Fragment {
             "Hacer ejercicio te puede relajar",
     };
 
-
     private Uri rec_images[] = {
             Uri.parse("https://nementio.com/wp-content/uploads/netflix-new-icon.png"),
             Uri.parse("https://lh3.googleusercontent.com/proxy/A7YjlD6bQYMIKuRzIonnq2C-5d2VssmsgbeuhPKlrVtlrZFztOxyZRWRWTNIi29hZB1YLQiVYqlW-s7WlSJT-fxNNjmFHn4arBHA"),
@@ -41,27 +42,15 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        /*final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
-
         ListView listView = (ListView) root.findViewById(R.id.recomendation_list);
-        //listView.addHeaderView(textView);
 
-        // For populating list data
+        // Rellena la lista de los items de ejemplo creados arriba
         RecomendationListAdapter recomendationList = new RecomendationListAdapter(getActivity(), rec_title, rec_description, rec_images);
         listView.setAdapter(recomendationList);
-
 
         return root;
     }

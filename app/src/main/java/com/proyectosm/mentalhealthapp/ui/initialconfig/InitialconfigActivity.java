@@ -107,6 +107,7 @@ public class InitialconfigActivity extends AppCompatActivity {
                         .build();
 
 
+                // Hacemos una peticion al servidor cloud para registrar el usuario
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 

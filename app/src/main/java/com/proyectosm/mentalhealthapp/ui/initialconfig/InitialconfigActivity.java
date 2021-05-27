@@ -1,16 +1,20 @@
-package com.proyectosm.mentalhealthapp;
+package com.proyectosm.mentalhealthapp.ui.initialconfig;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
+import com.proyectosm.mentalhealthapp.MainActivity;
+import com.proyectosm.mentalhealthapp.R;
+import com.proyectosm.mentalhealthapp.TokenModel;
 import com.proyectosm.mentalhealthapp.ui.settings.InterestsListAdapter;
 import com.proyectosm.mentalhealthapp.ui.settings.InterestsModel;
 
@@ -18,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,16 +32,9 @@ import okhttp3.Response;
 
 public class InitialconfigActivity extends AppCompatActivity {
 
-    private InterestsModel interests[] = {
-            new InterestsModel(1,"Interes 1", false),
-            new InterestsModel(2,"Interes 2", false),
-            new InterestsModel(3,"Interes 3", true),
-            new InterestsModel(4,"Interes 4", false),
-            new InterestsModel(5,"Interes 5", true),
-            new InterestsModel(6,"Interes 6", true),
-            new InterestsModel(7,"Interes 7", false),
-            new InterestsModel(8,"Interes 8", false),
-    };
+    InitialconfigModel initialconfigModel;
+
+    private InterestsModel[] interests;
 
     OkHttpClient client;
     Button startBtn;
@@ -44,29 +43,53 @@ public class InitialconfigActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = new OkHttpClient();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        initialconfigModel = new ViewModelProvider(this).get(InitialconfigModel.class);
+
         setContentView(R.layout.initialconfig_view);
 
+        startBtn = (Button) this.findViewById(R.id.initial_start_button);
+        nameTextVIew = (TextInputLayout) this.findViewById(R.id.initial_name);
         ListView listView = (ListView) this.findViewById(R.id.initial_interest_list);
 
         // Construct the data source
         ArrayList<InterestsModel> arrayOfInterestsEntries = new ArrayList<InterestsModel>();
 
-        // meter los datos a la lista de los ntereses
+        // meter los datos a la lista de los intereses
         InterestsListAdapter interestsListAdapter = new InterestsListAdapter(this, arrayOfInterestsEntries);
         listView.setAdapter(interestsListAdapter);
-        interestsListAdapter.addAll(interests);
 
-        startBtn = (Button) this.findViewById(R.id.initial_start_button);
-        nameTextVIew = (TextInputLayout) this.findViewById(R.id.initial_name);
+        initialconfigModel.setInterests(getInterests());
 
+
+        // usamos un observador para actualizar la lista
+        initialconfigModel.getInterests().observe(this, new Observer<InterestsModel[]>() {
+            @Override
+            public void onChanged(InterestsModel[] data) {
+                interestsListAdapter.clear();
+                interestsListAdapter.addAll(data);
+            }
+        });
+
+
+        // colocamos un listener para detectar los clicks a los intereses
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                interests[position].setActive(!interests[position].isActive());
+
+            }
+        });
+
+        // escuchamos el click al boton del "empezar"
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client = new OkHttpClient();
                 RequestBody formBody = new FormBody.Builder()
                         .add("name", "holaaaa")
                         .add("interest", "1|2|5")
@@ -80,18 +103,16 @@ public class InitialconfigActivity extends AppCompatActivity {
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-
-                    Log.d("ajax", response.body().string());
-
-
                     Gson gson = new Gson();
                     TokenModel jsonData = gson.fromJson(response.body().string(), TokenModel.class);
 
                     SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("token", jsonData.getToken());
+                    editor.apply();
 
-                    nameTextVIew.getEditText().setText(jsonData.getToken());
+                    Intent intent = new Intent(InitialconfigActivity.this, MainActivity.class);
+                    startActivity(intent);
 
 
                 } catch (IOException e) {
@@ -100,6 +121,28 @@ public class InitialconfigActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private InterestsModel[] getInterests(){
+
+        InterestsModel[] interestsModels = null;
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/interests")
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            Gson gson = new Gson();
+            interestsModels = gson.fromJson(response.body().string(), InterestsModel[].class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return interestsModels;
     }
 
 }

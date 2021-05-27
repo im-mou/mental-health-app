@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class SettingsInterestsBottomSheet extends BottomSheetDialogFragment {
 
     private InterestsModel interests[] = {
-            new InterestsModel(1,"Interes 1", false),
-            new InterestsModel(2,"Interes 2", false),
-            new InterestsModel(3,"Interes 3", true),
-            new InterestsModel(4,"Interes 4", false),
-            new InterestsModel(5,"Interes 5", true),
-            new InterestsModel(6,"Interes 6", true),
-            new InterestsModel(7,"Interes 7", false),
-            new InterestsModel(8,"Interes 8", false),
+            new InterestsModel(1,"Interes 1", 0.5,false),
+            new InterestsModel(2,"Interes 2", 0.5,false),
+            new InterestsModel(3,"Interes 3", 0.5,true),
+            new InterestsModel(4,"Interes 4", 0.5,false),
+            new InterestsModel(5,"Interes 5", 0.5,true),
+            new InterestsModel(6,"Interes 6", 0.5,true),
+            new InterestsModel(7,"Interes 7", 0.5,false),
+            new InterestsModel(8,"Interes 8", 0.5,false),
     };
 
     public SettingsInterestsBottomSheet() {

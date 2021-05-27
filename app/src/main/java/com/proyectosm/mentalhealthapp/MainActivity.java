@@ -9,6 +9,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
+import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -45,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
         // en esta parte comprobamos si existe el token para identificar al usuairio,
         // En el caso de que no exista el token, redirigimos al usuairo a la paginas para el registro
         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
+        String token = sharedPreferences.getString("token", "defaultValue");
+
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("token", "");
+//        editor.apply();
 
         if(token == "") {
             Intent intent = new Intent(MainActivity.this, InitialconfigActivity.class);

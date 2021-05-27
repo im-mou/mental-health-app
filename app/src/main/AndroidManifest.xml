@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InitialconfigActivity"></activity>
+        <activity android:name=".ui.initialconfig.InitialconfigActivity"></activity>
     </application>
 
 </manifest>

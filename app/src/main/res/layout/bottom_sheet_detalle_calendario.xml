@@ -5,17 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_sheet_layout"
-    android:padding="30dp"
-    >
- <!--   <TextView
-        android:id="@+id/cal_detail_sheet_preheader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/helveticaneue"
-        android:textFontWeight="800"
-        android:textSize="14sp"
-        android:text="@string/journal_details"
-        />-->
+    android:padding="30dp">
     <TextView
         android:id="@+id/cal_detail_sheet_title"
         android:layout_width="match_parent"

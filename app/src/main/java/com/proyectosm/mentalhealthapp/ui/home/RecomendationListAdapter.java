@@ -13,18 +13,13 @@ import com.proyectosm.mentalhealthapp.R;
 
 public class RecomendationListAdapter extends ArrayAdapter {
     // Clase auxiliar que recibe los valores de fuera y construye la lista de recomendación
-    private String[] titles;
-    private String[] descriptions;
-    private Uri[] imageuri;
     private Activity context;
-
+    private HomeFragment.Rec_list rec_list[];
     // Obtiene el contexto, títulos, descripciones y paths de las fotos
-    public RecomendationListAdapter(Activity context, String[] titles, String[] descriptions, Uri[] imageuri) {
-        super(context, R.layout.recomendation_list_item, titles);
+    public RecomendationListAdapter(Activity context, HomeFragment.Rec_list[] rec_list) {
+        super(context, R.layout.recomendation_list_item, rec_list);
         this.context = context;
-        this.titles = titles;
-        this.descriptions = descriptions;
-        this.imageuri = imageuri;
+        this.rec_list = rec_list;
     }
 
     @Override
@@ -41,9 +36,9 @@ public class RecomendationListAdapter extends ArrayAdapter {
         SimpleDraweeView imageAvatar = (SimpleDraweeView) row.findViewById(R.id.rec_item_image);
 
         // Cambia los textos por los obtenidos
-        textViewTitle.setText(titles[position]);
-        textViewDesc.setText(descriptions[position]);
-        imageAvatar.setImageURI(imageuri[position]);
+        textViewTitle.setText(rec_list[position].getTitulo());
+        textViewDesc.setText(rec_list[position].getDescription());
+        imageAvatar.setImageURI(rec_list[position].getIcon());
         return row;
     }
 }

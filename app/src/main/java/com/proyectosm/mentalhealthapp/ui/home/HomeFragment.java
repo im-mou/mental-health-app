@@ -31,6 +31,43 @@ import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
 
+    public class Rec_list {
+        String titulo;
+        String description;
+        Uri url;
+
+        public Rec_list(String titulo, String desc, Uri icon) {
+            this.titulo = titulo;
+            this.description = desc;
+            this.url = icon;
+        }
+
+        public String getTitulo() {
+            return titulo;
+        }
+
+        public void setTitulo(String titulo) {
+            this.titulo = titulo;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public Uri getIcon() {
+            return url;
+        }
+
+        public void setIcon(Uri icon) {
+            this.url = icon;
+        }
+    }
+
+
     // Variables principales de la vista del home
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
@@ -59,10 +96,6 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         ListView listView = (ListView) root.findViewById(R.id.recomendation_list);
-
-        // Rellena la lista de los items de ejemplo creados arriba
-        RecomendationListAdapter recomendationList = new RecomendationListAdapter(getActivity(), rec_title, rec_description, rec_images);
-        listView.setAdapter(recomendationList);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -109,6 +142,27 @@ public class HomeFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/recomendations")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+           Gson gson = new Gson();
+           assert response.body() != null;
+           Rec_list[] jsonData = gson.fromJson(response.body().string(), Rec_list[].class);
+
+           RecomendationListAdapter recomendationList = new RecomendationListAdapter(getActivity(), jsonData);
+           ListView listView = view.findViewById(R.id.recomendation_list);
+           listView.setAdapter(recomendationList);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

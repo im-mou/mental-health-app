@@ -1,11 +1,15 @@
 package com.proyectosm.mentalhealthapp.notifications;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationManagerCompat;
 
 import com.proyectosm.mentalhealthapp.R;
 
@@ -50,9 +54,11 @@ public class Notificacion_diurna_action extends BroadcastReceiver {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
         } catch (IOException e) {
+            Toast.makeText(context, "Request failed!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
-        Toast.makeText(context, Double.toString(sentimentValue), Toast.LENGTH_SHORT).show();
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.cancel(0);
     }
 }

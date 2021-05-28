@@ -110,7 +110,7 @@ public class SettingsFragment extends Fragment {
                 boolean fechaBien = false;
                 if (tmpSleep.length() == 5) {
                     if (tmpSleep.charAt(0) >= '0' && tmpSleep.charAt(0) <= '2') {
-                        if (tmpSleep.charAt(1) >= '0' && tmpSleep.charAt(1) <= '4') {
+                        if ((tmpSleep.charAt(0) == '2' && (tmpSleep.charAt(1) >= '0' && tmpSleep.charAt(1) <= '4')) || (tmpSleep.charAt(0) != '2' && (tmpSleep.charAt(1) >= '0' && tmpSleep.charAt(1) <= '9'))) {
                             if (tmpSleep.charAt(2) == ':') {
                                 if (tmpSleep.charAt(3) >= '0' && tmpSleep.charAt(3) <= '5') {
                                     if (tmpSleep.charAt(4) >= '0' && tmpSleep.charAt(4) <= '9') {

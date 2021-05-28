@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, InitialconfigActivity.class);
             startActivity(intent);
         }
+
+        generateJournalEntries();
+
     }
 
     private void generateJournalEntries() {

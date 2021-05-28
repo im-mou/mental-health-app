@@ -102,6 +102,7 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel.getCurrentDate().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String changeDate) {
+
                 DatesUtils parsedDate = new DatesUtils(changeDate);
                 title_month.setText(parsedDate.getMonth() + ", " + parsedDate.getYear());
                 title_today_date.setText("Hoy es " + parsedDate.getHumanDate());

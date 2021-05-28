@@ -15,8 +15,10 @@ import com.google.gson.Gson;
 import com.proyectosm.mentalhealthapp.MainActivity;
 import com.proyectosm.mentalhealthapp.R;
 import com.proyectosm.mentalhealthapp.TokenModel;
+import com.proyectosm.mentalhealthapp.UserModel2;
 import com.proyectosm.mentalhealthapp.ui.settings.InterestsListAdapter;
 import com.proyectosm.mentalhealthapp.ui.settings.InterestsModel;
+import com.proyectosm.mentalhealthapp.ui.settings.SettingsFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +31,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.proyectosm.mentalhealthapp.MainActivity.CreateNotificationChannel;
+import static com.proyectosm.mentalhealthapp.MainActivity.setNotifications;
 
 public class InitialconfigActivity extends AppCompatActivity {
 
@@ -119,9 +124,14 @@ public class InitialconfigActivity extends AppCompatActivity {
                     editor.putString("token", jsonData.getToken());
                     editor.apply();
 
+
+                    CreateNotificationChannel(getApplicationContext()); // crear el canal de notificaciones
+
+                    setNotifications(23, 0, 55, true, getApplicationContext());
+
+
                     Intent intent = new Intent(InitialconfigActivity.this, MainActivity.class);
                     startActivity(intent);
-
 
                 } catch (IOException e) {
                     e.printStackTrace();

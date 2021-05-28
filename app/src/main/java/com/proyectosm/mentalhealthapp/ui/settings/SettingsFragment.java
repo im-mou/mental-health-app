@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
+import com.proyectosm.mentalhealthapp.MainActivity;
 import com.proyectosm.mentalhealthapp.R;
 import com.proyectosm.mentalhealthapp.UserModel2;
 import com.proyectosm.mentalhealthapp.databinding.FragmentSettingsBinding;
@@ -27,6 +28,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.proyectosm.mentalhealthapp.MainActivity.setNotifications;
 
 public class SettingsFragment extends Fragment {
 
@@ -104,11 +107,15 @@ public class SettingsFragment extends Fragment {
                         .post(formBody)
                         .build();
 
+                if(currentUser.isNotifications() == 1) {
+                    setNotifications(3, Integer.parseInt(currentUser.getSleep_time()), 55, true, getContext());
+                }
 
-                // Hacemos una peticion al servidor cloud para registrar el usuario
+                    // Hacemos una peticion al servidor cloud para registrar el usuario
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                     Toast.makeText(getContext(), "Datos guardados", Toast.LENGTH_SHORT).show();
+                    getUserinfo(token);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -131,17 +138,27 @@ public class SettingsFragment extends Fragment {
                    try (Response response = client.newCall(request).execute()) {
                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                        if(currentUser != null){
+
+                           boolean toggle;
+
                            if(currentUser.isNotifications() == 1){
                                currentUser.setNotifications(0);
                                disableNotifications.setText("Activar notificaciones");
                                Toast.makeText(getContext(), "Notificaciones desactivadas", Toast.LENGTH_SHORT).show();
+                               toggle = false;
+
                            }
                            else {
                                currentUser.setNotifications(1);
                                disableNotifications.setText("Desactivar notificaciones");
                                Toast.makeText(getContext(), "Notificaciones activadas", Toast.LENGTH_SHORT).show();
-
+                               toggle = true;
                            }
+
+
+                           Toast.makeText(getContext(), currentUser.getSleep_time(), Toast.LENGTH_SHORT).show();
+                           setNotifications(3, Integer.parseInt(currentUser.getSleep_time()), 55, toggle, getContext());
+
                        }
                    } catch (IOException e) {
                        e.printStackTrace();
@@ -174,30 +191,44 @@ public class SettingsFragment extends Fragment {
 
 
         // Hacemos una peticion al servidor cloud para registrar el usuario
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            Gson gson = new Gson();
-            UserInfoModel jsonData = gson.fromJson(response.body().string(), UserInfoModel.class);
+        getUserinfo(token);
 
-            name.getEditText().setText(jsonData.getUser().getName());
-            sleepHours.getEditText().setText(jsonData.getUser().getSleep_time());
+        name.getEditText().setText(currentUser.getName());
+        sleepHours.getEditText().setText(currentUser.getSleep_time());
 
-            currentUser = jsonData.getUser();
-            userInterests = jsonData.getInterests();
 
-            if(currentUser.isNotifications() == 1){
-                disableNotifications.setText("Desactivar notificaciones");
-            }
-            else {
-                disableNotifications.setText("Activar notificaciones");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(currentUser.isNotifications() == 1){
+            disableNotifications.setText("Desactivar notificaciones");
+        }
+        else {
+            disableNotifications.setText("Activar notificaciones");
         }
 
         return root;
     }
 
+    public void getUserinfo(String token) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", token)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/user/info")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+            Gson gson = new Gson();
+            UserInfoModel jsonData = gson.fromJson(response.body().string(), UserInfoModel.class);
+
+            currentUser = jsonData.getUser();
+            userInterests = jsonData.getInterests();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onDestroyView() {

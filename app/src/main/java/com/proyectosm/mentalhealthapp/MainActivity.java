@@ -10,12 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
+import android.os.StrictMode;
+import android.widget.Toast;
 
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
+import com.google.gson.Gson;
 import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
 import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
 
@@ -31,6 +33,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_diurna_reciever;
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_nocturna;
+import com.proyectosm.mentalhealthapp.ui.settings.SettingsFragment;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     DatabaseReference connectedRef;
+    OkHttpClient client;
+    UserModel2 currentUser;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +94,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, InitialconfigActivity.class);
             startActivity(intent);
         }
-
-        CreateNotificationChannel(); // crear el canal de notificaciones
-        setNotifications(22, 0, 0, 55);
     }
 
-    public void setNotifications(int h, int m, int s, int id) {
+    public static void setNotifications(int h, int m, int id, boolean toggle, Context context) {
         Calendar calendar_d = Calendar.getInstance();
         Calendar calendar_d1 = Calendar.getInstance();
         Calendar calendar_n = Calendar.getInstance();
@@ -96,43 +112,50 @@ public class MainActivity extends AppCompatActivity {
         // Establece las horas que se recibirán las notificaciones
         calendar_d.set(Calendar.HOUR_OF_DAY, h2);
         calendar_d.set(Calendar.MINUTE, m);
-        calendar_d.set(Calendar.SECOND, s);
+        calendar_d.set(Calendar.SECOND, 0);
 
         calendar_d1.set(Calendar.HOUR_OF_DAY, h1);
         calendar_d1.set(Calendar.MINUTE, m);
-        calendar_d1.set(Calendar.SECOND, s);
+        calendar_d1.set(Calendar.SECOND, 0);
 
         calendar_n.set(Calendar.HOUR_OF_DAY, h);
         calendar_n.set(Calendar.MINUTE, m);
-        calendar_n.set(Calendar.SECOND, s);
+        calendar_n.set(Calendar.SECOND, 0);
 
         // Se lanzan los intentos
-        Intent intent_d = new Intent(getApplicationContext(), Notificacion_diurna_reciever.class);
-        Intent intent_d1 = new Intent(getApplicationContext(), Notificacion_diurna_reciever.class);
-        Intent intent_n = new Intent(getApplicationContext(), Notificacion_nocturna.class);
+        Intent intent_d = new Intent(context, Notificacion_diurna_reciever.class);
+        Intent intent_d1 = new Intent(context, Notificacion_diurna_reciever.class);
+        Intent intent_n = new Intent(context, Notificacion_nocturna.class);
 
         // Lanza las notificaciones a las horas establecidas
-        PendingIntent pendingIntent_d = PendingIntent.getBroadcast(getApplicationContext(), id, intent_d, PendingIntent.FLAG_ONE_SHOT);
-        PendingIntent pendingIntent_d1 = PendingIntent.getBroadcast(getApplicationContext(), id+1, intent_d1, PendingIntent.FLAG_ONE_SHOT);
-        PendingIntent pendingIntent_n = PendingIntent.getBroadcast(getApplicationContext(), id+2, intent_n, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent_d = PendingIntent.getBroadcast(context, id, intent_d, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent_d1 = PendingIntent.getBroadcast(context, id+1, intent_d1, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent_n = PendingIntent.getBroadcast(context, id+2, intent_n, PendingIntent.FLAG_ONE_SHOT);
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(ALARM_SERVICE);
 
         // Realiza las notificaciones cada 24 horas
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar_d.getTimeInMillis(), AlarmManager.INTERVAL_DAY , pendingIntent_d);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar_d1.getTimeInMillis(), AlarmManager.INTERVAL_DAY , pendingIntent_d1);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar_n.getTimeInMillis(), AlarmManager.INTERVAL_DAY , pendingIntent_n);
+        if(toggle) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar_d.getTimeInMillis(), AlarmManager.INTERVAL_DAY , pendingIntent_d);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar_d1.getTimeInMillis(), AlarmManager.INTERVAL_DAY , pendingIntent_d1);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar_n.getTimeInMillis(), AlarmManager.INTERVAL_DAY , pendingIntent_n);
+        } else {
+            alarmManager.cancel(pendingIntent_d);
+            alarmManager.cancel(pendingIntent_d1);
+            alarmManager.cancel(pendingIntent_n);
+        }
+
 
     }
 
     // Parámetros de la notificación
-    public void CreateNotificationChannel() {
+    public static void CreateNotificationChannel(@NotNull Context context) {
         CharSequence name = "MH App";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
         mChannel.setDescription("Canal principal de la app");
 
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(mChannel);
     }
 }

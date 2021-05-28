@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.proyectosm.mentalhealthapp.DatesUtils;
 import com.proyectosm.mentalhealthapp.R;
+import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,11 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecyclerAdapter.MyViewHolder> {
 
-    NotificationsFragment.JournalModel[] journal;
+    JournalModel[] journal;
     Context context;
     ViewModelProvider notificationsViewModel;
 
-    public CalendarRecyclerAdapter(Context context, NotificationsFragment.JournalModel[] journal) {
+    public CalendarRecyclerAdapter(Context context, JournalModel[] journal) {
         this.journal = journal;
         this.context = context;
     }
@@ -68,7 +69,7 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NotificationsFragment.JournalModel JournalEntry = journal[position];
+                JournalModel JournalEntry = journal[position];
 
                 FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
 

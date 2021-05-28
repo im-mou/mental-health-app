@@ -1,6 +1,7 @@
 package com.proyectosm.mentalhealthapp.ui.notifications;
 
 import com.proyectosm.mentalhealthapp.DatesUtils;
+import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 
 import java.util.Date;
 
@@ -11,7 +12,7 @@ import androidx.lifecycle.ViewModel;
 public class NotificationsViewModel extends ViewModel {
 
     private MutableLiveData<String> current_date;
-    private MutableLiveData<NotificationsFragment.JournalModel[]> journalJsonData;
+    private MutableLiveData<JournalModel[]> journalJsonData;
 
     public NotificationsViewModel() {
         current_date = new MutableLiveData<>();
@@ -23,11 +24,11 @@ public class NotificationsViewModel extends ViewModel {
     public LiveData<String> getCurrentDate() {
         return current_date;
     }
-    public LiveData<NotificationsFragment.JournalModel[]> getJournalJsonData() {
+    public LiveData<JournalModel[]> getJournalJsonData() {
         return journalJsonData;
     }
 
-    public void setJournalJsonData(NotificationsFragment.JournalModel[] data) {
+    public void setJournalJsonData(JournalModel[] data) {
         journalJsonData.setValue(data);
     }
 }

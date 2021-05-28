@@ -48,7 +48,14 @@
             android:layout_height="wrap_content"
             android:text="@string/save"
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFEEEEEE"
+            android:layout_marginVertical="40dp"
             />
 
         <Button

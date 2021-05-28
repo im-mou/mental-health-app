@@ -1,10 +1,13 @@
 package com.proyectosm.mentalhealthapp.ui.dashboard;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -17,17 +20,24 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.proyectosm.mentalhealthapp.R;
+import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.proyectosm.mentalhealthapp.R;
-import com.proyectosm.mentalhealthapp.databinding.FragmentDashboardBinding;
-
-import java.util.ArrayList;
-import java.util.Locale;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class DashboardFragment extends Fragment {
     // Variables necesarias para la captación de audio
@@ -42,24 +52,20 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
 
     // Chat de ejemplo
-    private ChatModel chatrecord[] = {
-            // Se crean diversas instancias de ChatModel y luego se cargan dentro de chatsListAdapter
-            new ChatModel("¿Cómo te has sentido al despertarte?", true),
-            new ChatModel("Lorem Ipsum is simply dummy text of the printing and typesetting industry.", false),
-            new ChatModel("¿Avanzaste mucho en tus proyectos ayer? ¿Por qué?", true),
-            new ChatModel("When an unknown printer took a galley of type and scrambled it to make a type specimen book", false),
-            new ChatModel("¿Cómo crees que te irá el día hoy?", true),
-            new ChatModel("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s", false),
-            new ChatModel("¿Te sientes con seguridad en tu sitio de trabajo? ¿Y por qué?", true),
-            new ChatModel("It has survived not only five centuries, but also the leap into electronic typesetting", false),
-            new ChatModel("¿Has estado relajado/a hoy?", true),
-            new ChatModel("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.", false),
-    };
+    private ChatModel[] chatrecord;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+
+        // hace la llamada al servidor para obtener los datos
+        OkHttpClient client = new OkHttpClient();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
 
         ListView listView = (ListView) root.findViewById(R.id.chat_container);
 
@@ -70,7 +76,32 @@ public class DashboardFragment extends Fragment {
         ChatListAdapter chatsListAdapter = new ChatListAdapter(getActivity(), arrayOfChatEntries);
         listView.setAdapter(chatsListAdapter);
 
-        chatsListAdapter.addAll(chatrecord);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", token)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/journal/today")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            Gson gson = new Gson();
+            JournalModel todayJournal = gson.fromJson(response.body().string(), JournalModel.class);
+
+            chatrecord = todayJournal.getChat();
+            chatsListAdapter.addAll(chatrecord);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return root;
     }

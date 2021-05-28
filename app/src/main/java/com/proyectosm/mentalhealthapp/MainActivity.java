@@ -4,13 +4,12 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Intent;
-import android.icu.util.Calendar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.os.StrictMode;
-
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,6 +19,8 @@ import com.proyectosm.mentalhealthapp.notifications.Notificacion_diurna_reciever
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_nocturna;
 import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,11 +28,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-
-import org.jetbrains.annotations.NotNull;
-
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -122,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Establece las horas que se recibirán las notificaciones
-        calendar_d.set(Calendar.HOUR_OF_DAY, h2);
+        calendar_d.set(Calendar.HOUR_OF_DAY, h);
         calendar_d.set(Calendar.MINUTE, m);
         calendar_d.set(Calendar.SECOND, 0);
 
@@ -130,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         calendar_d1.set(Calendar.MINUTE, m);
         calendar_d1.set(Calendar.SECOND, 0);
 
-        calendar_n.set(Calendar.HOUR_OF_DAY, h);
+        calendar_n.set(Calendar.HOUR_OF_DAY, h2);
         calendar_n.set(Calendar.MINUTE, m);
         calendar_n.set(Calendar.SECOND, 0);
 

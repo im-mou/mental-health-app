@@ -1,5 +1,6 @@
 package com.proyectosm.mentalhealthapp;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -41,6 +42,10 @@ public class DatesUtils {
         }
     }
 
+    public DatesUtils(Date parsedDate) {
+        this.parsedDate = parsedDate;
+    }
+
     // Funciones getters
     public String getDay(){
         return new SimpleDateFormat("dd", this.locale).format(this.parsedDate);
@@ -48,7 +53,7 @@ public class DatesUtils {
 
     public String getHumanDate(){
         String dayName = new SimpleDateFormat("EEEE, dd", this.locale).format(this.parsedDate);
-        String monthName = new SimpleDateFormat("LLLL, YYYY", this.locale).format(this.parsedDate);
+        String monthName = new SimpleDateFormat("LLLL, yyyy", this.locale).format(this.parsedDate);
         return dayName + " de " + monthName;
     }
 
@@ -66,8 +71,12 @@ public class DatesUtils {
     }
 
     public String getCurrentDate(){
-        return new SimpleDateFormat("dd-MM-yyyy", this.locale).format(this.parsedDate);
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        return formatter.format(this.parsedDate);
     }
 
+    public Date getParsedDate() {
+        return parsedDate;
+    }
 
 }

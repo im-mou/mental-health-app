@@ -17,12 +17,12 @@ import com.proyectosm.mentalhealthapp.UserModel2;
 import com.proyectosm.mentalhealthapp.databinding.FragmentHomeBinding;
 import com.proyectosm.mentalhealthapp.ui.settings.SettingsFragment;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import java.io.IOException;
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -107,63 +107,67 @@ public class HomeFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
 
+
         if(token != "") {
+
+            // hacemos una llamada al servidor para obtener datos del usuarios
             RequestBody formBody = new FormBody.Builder()
                     .add("token", token)
                     .build();
 
-            getTitleAndRecomendations(client, formBody, root);
+            Request request = new Request.Builder()
+                    .url(getResources().getString(R.string.api_url) + "/user/info")
+                    .post(formBody)
+                    .build();
+
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                UserModel2 currentUser;
+
+                Gson gson = new Gson();
+                assert response.body() != null;
+                SettingsFragment.UserInfoModel jsonData = gson.fromJson(response.body().string(), SettingsFragment.UserInfoModel.class);
+
+                currentUser = jsonData.getUser();
+
+                TextView pretitle = (TextView) root.findViewById(R.id.bubble_pretitle);
+
+                // pretitle.setText(getString(R.string.hello) + " " + currentUser.getName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            request = new Request.Builder()
+                    .url(getResources().getString(R.string.api_url) + "/recomendations")
+                    .post(formBody)
+                    .build();
+
+
+            // hacemos una llamada al servidor para obtener las recomendaciones
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                // Se crea la lista del calendario vacía
+                ArrayList<Rec_list> arrayOfrecomendations = new ArrayList<Rec_list>();
+                RecomendationListAdapter recomendationListAdapter = new RecomendationListAdapter(getActivity(), arrayOfrecomendations);
+
+                Gson gson = new Gson();
+                assert response.body() != null;
+                ArrayList<Rec_list> jsonData = gson.fromJson(response.body().string(), ArrayList.class);
+
+                listView.setAdapter(recomendationListAdapter);
+                recomendationListAdapter.addAll(jsonData);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return root;
     }
 
-    private void getTitleAndRecomendations(OkHttpClient client, RequestBody formBody, View view){
-        Request request = new Request.Builder()
-                .url(getResources().getString(R.string.api_url)+"/user/info")
-                .post(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            UserModel2 currentUser;
-
-            Gson gson = new Gson();
-            assert response.body() != null;
-            SettingsFragment.UserInfoModel jsonData = gson.fromJson(response.body().string(), SettingsFragment.UserInfoModel.class);
-
-            currentUser = jsonData.getUser();
-
-
-            TextView pretitle = (TextView)view.findViewById(R.id.bubble_pretitle);
-
-            pretitle.setText(getString(R.string.hello) + " " + currentUser.getName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        request = new Request.Builder()
-                .url(getResources().getString(R.string.api_url)+"/recomendations")
-                .post(formBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-           Gson gson = new Gson();
-           assert response.body() != null;
-           Rec_list[] jsonData = gson.fromJson(response.body().string(), Rec_list[].class);
-
-           RecomendationListAdapter recomendationList = new RecomendationListAdapter(getActivity(), jsonData);
-           ListView listView = view.findViewById(R.id.recomendation_list);
-           listView.setAdapter(recomendationList);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public void onDestroyView() {

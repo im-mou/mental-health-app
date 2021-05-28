@@ -5,20 +5,24 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.icu.util.Calendar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.widget.TextView;
 
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
+import com.google.gson.Gson;
 import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_diurna_reciever;
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_nocturna;
 import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
+import com.proyectosm.mentalhealthapp.ui.settings.SettingsFragment;
 
 import java.io.IOException;
 
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
+
+
         // Se inicializa la barra de configuración y se le asignan los distintos fragments
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications, R.id.navigation_settings)
@@ -66,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        // Inicializa los parámetros para recibir notificaciones
+        OkHttpClient client = new OkHttpClient();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         // en esta parte comprobamos si existe el token para identificar al usuairio,
         // En el caso de que no exista el token, redirigimos al usuairo a la paginas para el registro
@@ -78,23 +87,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        generateJournalEntries();
-
-    }
-
-    private void generateJournalEntries() {
-        OkHttpClient client = new OkHttpClient();
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
-
         RequestBody formBody = new FormBody.Builder()
                 .add("token", token)
                 .build();
 
+        generateJournalEntries(client, formBody);
+    }
+
+    private void generateJournalEntries(OkHttpClient client, RequestBody formBody) {
         Request request = new Request.Builder()
                 .url(getResources().getString(R.string.api_url)+"/journal/generate")
                 .post(formBody)
@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 
 
     public static void setNotifications(int h, int m, int id, boolean toggle, Context context) {
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Establece las horas que se recibirán las notificaciones
-        calendar_d.set(Calendar.HOUR_OF_DAY, h2);
+        calendar_d.set(Calendar.HOUR_OF_DAY, h);
         calendar_d.set(Calendar.MINUTE, m);
         calendar_d.set(Calendar.SECOND, 0);
 
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         calendar_d1.set(Calendar.MINUTE, m);
         calendar_d1.set(Calendar.SECOND, 0);
 
-        calendar_n.set(Calendar.HOUR_OF_DAY, h);
+        calendar_n.set(Calendar.HOUR_OF_DAY, h2);
         calendar_n.set(Calendar.MINUTE, m);
         calendar_n.set(Calendar.SECOND, 0);
 

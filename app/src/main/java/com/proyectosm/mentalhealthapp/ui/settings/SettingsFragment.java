@@ -181,6 +181,7 @@ public class SettingsFragment extends Fragment {
 
                            if(currentUser.isNotifications() == 1){
                                currentUser.setNotifications(0);
+
                                disableNotifications.setText("Activar notificaciones");
                                Toast.makeText(getContext(), "Notificaciones desactivadas", Toast.LENGTH_SHORT).show();
                                toggle = false;

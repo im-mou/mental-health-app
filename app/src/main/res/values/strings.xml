@@ -20,8 +20,8 @@
     <string name="initial_start">Empezar</string>
     <string name="api_url">http://mental-health.mohsinriaz.es/api/v1</string>
     <string name="mood">Pareces estar un poco estresado.</string>
-    <string name="recommendation">Te recomiendo los siguiente:</string>
-    <string name="hello">Buenas, {username}</string>
+    <string name="recommendation">Te recomiendo lo siguiente:</string>
+    <string name="hello">Buenas, </string>
     <string name="save">guardar datos</string>
 
 

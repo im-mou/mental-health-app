@@ -28,7 +28,7 @@
         android:paddingEnd="10sp"
         android:paddingStart="0sp"
         android:focusable="false"
-
+        android:clickable="false"
         android:layout_gravity="center"
         />
 

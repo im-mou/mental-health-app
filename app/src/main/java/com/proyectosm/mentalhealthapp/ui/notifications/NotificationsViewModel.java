@@ -9,11 +9,11 @@ import androidx.lifecycle.ViewModel;
 public class NotificationsViewModel extends ViewModel {
 
     private MutableLiveData<String> current_date;
-    private MutableLiveData<CalendarModel[]> calendarJsonData;
+    private MutableLiveData<NotificationsFragment.JournalModel[]> journalJsonData;
 
     public NotificationsViewModel() {
         current_date = new MutableLiveData<>();
-        calendarJsonData = new MutableLiveData<>();
+        journalJsonData = new MutableLiveData<>();
 
         current_date.setValue(new DatesUtils().getCurrentDate());
     }
@@ -21,11 +21,11 @@ public class NotificationsViewModel extends ViewModel {
     public LiveData<String> getCurrentDate() {
         return current_date;
     }
-    public LiveData<CalendarModel[]> getCalendarJsonData() {
-        return calendarJsonData;
+    public LiveData<NotificationsFragment.JournalModel[]> getJournalJsonData() {
+        return journalJsonData;
     }
 
-    public void setCalendarJsonData(CalendarModel[] data) {
-        calendarJsonData.setValue(data);
+    public void setJournalJsonData(NotificationsFragment.JournalModel[] data) {
+        journalJsonData.setValue(data);
     }
 }

@@ -2,7 +2,9 @@ package com.proyectosm.mentalhealthapp;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 
@@ -55,7 +57,8 @@ public class DatesUtils {
     }
 
     public String getYear(){
-        return new SimpleDateFormat("YYYY", this.locale).format(this.parsedDate);
+        LocalDate localDate = this.parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return Integer.toString(localDate.getYear());
     }
 
     public String getCurrentMonth(){
@@ -65,5 +68,6 @@ public class DatesUtils {
     public String getCurrentDate(){
         return new SimpleDateFormat("dd-MM-yyyy", this.locale).format(this.parsedDate);
     }
+
 
 }

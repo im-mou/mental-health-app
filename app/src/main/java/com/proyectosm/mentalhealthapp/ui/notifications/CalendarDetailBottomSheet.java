@@ -11,20 +11,20 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.proyectosm.mentalhealthapp.DatesUtils;
 import com.proyectosm.mentalhealthapp.R;
-import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 
 import java.util.ArrayList;
 
 public class CalendarDetailBottomSheet extends BottomSheetDialogFragment {
     // Variables iniciales para crear el objeto calendario
     private int position;
-    private CalendarModel calendarEntry;
+    private NotificationsFragment.JournalModel journalEntry;
+
 
     // Inicializa los datos de posición y calendario
-    public CalendarDetailBottomSheet(int position, CalendarModel calendarEntry) {
+    public CalendarDetailBottomSheet(int position, NotificationsFragment.JournalModel journalEntry) {
         super();
         this.position = position;
-        this.calendarEntry = calendarEntry;
+        this.journalEntry = journalEntry;
     }
 
     @Override
@@ -36,24 +36,24 @@ public class CalendarDetailBottomSheet extends BottomSheetDialogFragment {
         TextView textViewStatus = (TextView) sheetView.findViewById(R.id.cal_details_sheet_status);
 
         // Guarda la fecha actual y la escribe en uno de los textos
-        String humanDate = new DatesUtils(this.calendarEntry.date).getHumanDate();
+        String humanDate = new DatesUtils(journalEntry.date).getHumanDate();
         textViewDetailTitle.setText(humanDate);
 
         // Se ponen textos de ejemplo en los boxes del calendario
         textViewStatus.setText("Ayer estabas {mood}");
 
         // El calendario toma los colores según lo que le haya dicho el usuario
-        textViewStatus.setBackgroundColor(Color.parseColor(this.calendarEntry.color));
+        textViewStatus.setBackgroundColor(Color.parseColor(journalEntry.color));
 
         // Se crea la lista del calendario vacía
         ListView listView = (ListView) sheetView.findViewById(R.id.calendar_dates_list);
-        ArrayList<JournalModel> arrayOfJournalEntries = new ArrayList<JournalModel>();
+        ArrayList<NotificationsFragment.ChatModel> arrayOfJournalEntries = new ArrayList<NotificationsFragment.ChatModel>();
 
         // y se rellena de datos con las entradas que recibe
         CalendarDetailListAdapter calendarDetailListAdapter = new CalendarDetailListAdapter(getActivity(), arrayOfJournalEntries);
         listView.setAdapter(calendarDetailListAdapter);
 
-        calendarDetailListAdapter.addAll(this.calendarEntry.journal);
+        calendarDetailListAdapter.addAll(journalEntry.chat);
 
         return sheetView;
     }

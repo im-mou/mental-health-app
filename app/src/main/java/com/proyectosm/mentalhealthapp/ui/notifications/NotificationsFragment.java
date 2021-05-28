@@ -1,6 +1,10 @@
 package com.proyectosm.mentalhealthapp.ui.notifications;
 
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +15,13 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.proyectosm.mentalhealthapp.DatesUtils;
+import com.proyectosm.mentalhealthapp.R;
 import com.proyectosm.mentalhealthapp.databinding.FragmentNotificationsBinding;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,19 +30,60 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class NotificationsFragment extends Fragment {
 
     private NotificationsViewModel notificationsViewModel;
     private FragmentNotificationsBinding binding;
 
+
     private ListView listView;
+    OkHttpClient client;
+
+    public class ChatModel {
+        int journal_id;
+        int type;
+        String body;
+
+        public ChatModel(int journal_id, int type, String body) {
+            this.journal_id = journal_id;
+            this.type = type;
+            this.body = body;
+        }
+    }
+
+    public class JournalModel {
+        int journal_id;
+        int user_id;
+        String date;
+        String color;
+        double sentiment_index;
+        ChatModel[] chat;
+
+        public JournalModel(int journal_id, int user_id, String date, String color, double sentiment_index, ChatModel[] chat) {
+            this.journal_id = journal_id;
+            this.user_id = user_id;
+            this.date = date;
+            this.color = color;
+            this.sentiment_index = sentiment_index;
+            this.chat = chat;
+        }
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        client = new OkHttpClient();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
 
         final RecyclerView recyclerView = binding.calendarDatesList;
@@ -43,7 +94,7 @@ public class NotificationsFragment extends Fragment {
 
 
         // Construct the data source
-        CalendarRecyclerAdapter calendarRecyclerAdapter = new CalendarRecyclerAdapter(getContext(), getCalendarData(notificationsViewModel.getCurrentDate().getValue()));
+        CalendarRecyclerAdapter calendarRecyclerAdapter = new CalendarRecyclerAdapter(getContext(), getCurrentJournalData());
         recyclerView.setAdapter(calendarRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -54,16 +105,16 @@ public class NotificationsFragment extends Fragment {
                 DatesUtils parsedDate = new DatesUtils(changeDate);
                 title_month.setText(parsedDate.getMonth() + ", " + parsedDate.getYear());
                 title_today_date.setText("Hoy es " + parsedDate.getHumanDate());
-
-                CalendarModel[] jsonData = getCalendarData(notificationsViewModel.getCurrentDate().getValue());
-                notificationsViewModel.setCalendarJsonData(jsonData);
+//
+//                JournalModel[] jsonData = getCalendarData(notificationsViewModel.getCurrentDate().getValue());
+//                notificationsViewModel.setJournalJsonData(jsonData);
             }
         });
 
         // observar a los cambios de la estructura json de la lista de calendario
-        notificationsViewModel.getCalendarJsonData().observe(getViewLifecycleOwner(), new Observer<CalendarModel[]>() {
+        notificationsViewModel.getJournalJsonData().observe(getViewLifecycleOwner(), new Observer<JournalModel[]>() {
             @Override
-            public void onChanged(@Nullable CalendarModel[] jsonData) {
+            public void onChanged(@Nullable JournalModel[] jsonData) {
                 // For populating list data
 //                calendarRecyclerAdapter.clear();
 //                calendarRecyclerAdapter.addAll(jsonData);
@@ -87,44 +138,70 @@ public class NotificationsFragment extends Fragment {
         binding = null;
     }
 
-    private CalendarModel[] getCalendarData(String date){
+    private JournalModel[] getCurrentJournalData(){
 
-        // hacer la llamada API al servidor para obtener los datos
-        String calendarModelsData = "[{ 'date': '01-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '02-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '03-05-2021', 'sentiment_index': 1.0, 'color': '#FF7FECB7', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '04-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '05-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '06-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '07-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '08-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '09-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '10-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '11-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '12-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '13-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '14-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '15-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '16-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '17-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '18-05-2021', 'sentiment_index': 1.0, 'color': '#FF7FECB7', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '19-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '20-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '21-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '22-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '23-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '24-05-2021', 'sentiment_index': 1.0, 'color': '#FF7FECB7', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '25-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '26-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '27-05-2021', 'sentiment_index': 1.0, 'color': '#FFFF8078', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '28-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFD978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '29-05-2021', 'sentiment_index': 1.0, 'color': '#FF7FECB7', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] },"
-                + "{ 'date': '30-05-2021', 'sentiment_index': 1.0, 'color': '#FFFFB978', 'journal': [{'question': 'question 1', 'answer': 'answer 1'}, {'question': 'question 2', 'answer': 'answer 2'}] }]";
+        JournalModel[] journalModels = null;
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
 
-        //ArrayList<CalendarModel> newUsers = CalendarModel.fromJson(jsonArray)
-        Gson gson = new Gson();
-        CalendarModel[] jsonData = gson.fromJson(calendarModelsData, CalendarModel[].class);
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Integer month = localDate.getMonthValue();
+        Integer year = localDate.getYear();
 
-        return jsonData;
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", token)
+                .add("month", String.format("%02d", month))
+                .add("year",  Integer.toString(year))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/journal/month")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            Gson gson = new Gson();
+            journalModels = gson.fromJson(response.body().string(), JournalModel[].class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return journalModels;
     }
+
+
+    private JournalModel[] getCalendarData(String date){
+
+        JournalModel[] journalModels = null;
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", token)
+                .add("date", date)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/journal")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            Gson gson = new Gson();
+            journalModels = gson.fromJson(response.body().string(), JournalModel[].class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return journalModels;
+    }
+
 }

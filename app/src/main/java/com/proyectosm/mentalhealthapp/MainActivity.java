@@ -7,25 +7,10 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.widget.Toast;
 
-
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.gson.Gson;
-import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
-import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,12 +18,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.proyectosm.mentalhealthapp.databinding.ActivityMainBinding;
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_diurna_reciever;
 import com.proyectosm.mentalhealthapp.notifications.Notificacion_nocturna;
-import com.proyectosm.mentalhealthapp.ui.settings.SettingsFragment;
+import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
+
+import java.io.IOException;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -52,12 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static final String CHANNEL_ID = "MH_App";
 
-
     DatabaseReference connectedRef;
-    OkHttpClient client;
-    UserModel2 currentUser;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +73,37 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
 
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("token", "");
-//        editor.apply();
-
         if (token == "") {
             Intent intent = new Intent(MainActivity.this, InitialconfigActivity.class);
             startActivity(intent);
         }
     }
+
+    private void generateJournalEntries() {
+        OkHttpClient client = new OkHttpClient();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", token)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/journal/generate")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void setNotifications(int h, int m, int id, boolean toggle, Context context) {
         Calendar calendar_d = Calendar.getInstance();

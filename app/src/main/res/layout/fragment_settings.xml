@@ -43,6 +43,15 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/settings_btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_marginBottom="20dp"
+            />
+
+        <Button
             android:id="@+id/setting_btn_disable_notifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

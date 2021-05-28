@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +33,8 @@ public class SettingsFragment extends Fragment {
     private SettingsViewModel settingsViewModel;
     private FragmentSettingsBinding binding;
     OkHttpClient client;
+    UserModel2 currentUser;
+    InterestsModel[] userInterests;
 
     public class UserInfoModel {
         UserModel2 user;
@@ -78,8 +81,77 @@ public class SettingsFragment extends Fragment {
         final TextInputLayout sleepHours = binding.settingsInputChangeSleepHour;
         final Button disableNotifications = binding.settingBtnDisableNotifications;
         final Button editInterests = binding.settingsBtnEditInterests;
+        final Button guardarDatos = binding.settingsBtnSave;
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
+        guardarDatos.setOnClickListener(new AdapterView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String tmpName = name.getEditText().getText().toString();
+                String tmpSleep = sleepHours.getEditText().getText().toString();
+
+                RequestBody formBody = new FormBody.Builder()
+                        .add("token", token)
+                        .add("name", tmpName)
+                        .add("sleep_time", tmpSleep)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(getResources().getString(R.string.api_url)+"/user/update")
+                        .post(formBody)
+                        .build();
 
 
+                // Hacemos una peticion al servidor cloud para registrar el usuario
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    Toast.makeText(getContext(), "Datos guardados", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        disableNotifications.setOnClickListener(new AdapterView.OnClickListener() {
+           @Override
+           public void onClick(View v){
+               RequestBody formBody = new FormBody.Builder()
+                       .add("token", token)
+                       .build();
+
+               try {
+                   Request request = new Request.Builder()
+                           .url(getResources().getString(R.string.api_url)+"/user/togglenotifications")
+                           .post(formBody)
+                           .build();
+
+                   try (Response response = client.newCall(request).execute()) {
+                       if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                       if(currentUser != null){
+                           if(currentUser.isNotifications() == 1){
+                               currentUser.setNotifications(0);
+                               disableNotifications.setText("Activar notificaciones");
+                               Toast.makeText(getContext(), "Notificaciones desactivadas", Toast.LENGTH_SHORT).show();
+                           }
+                           else {
+                               currentUser.setNotifications(1);
+                               disableNotifications.setText("Desactivar notificaciones");
+                               Toast.makeText(getContext(), "Notificaciones activadas", Toast.LENGTH_SHORT).show();
+
+                           }
+                       }
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+
+               } catch (Exception e) {
+                   Toast.makeText(getContext(), "Error. No se ha podido actualizar!", Toast.LENGTH_SHORT).show();
+               }
+           }
+        });
 
         editInterests.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
@@ -89,8 +161,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "defaultValue");
+
 
         RequestBody formBody = new FormBody.Builder()
                 .add("token", token)
@@ -109,11 +180,20 @@ public class SettingsFragment extends Fragment {
             UserInfoModel jsonData = gson.fromJson(response.body().string(), UserInfoModel.class);
 
             name.getEditText().setText(jsonData.getUser().getName());
+            sleepHours.getEditText().setText(jsonData.getUser().getSleep_time());
+
+            currentUser = jsonData.getUser();
+            userInterests = jsonData.getInterests();
+
+            if(currentUser.isNotifications() == 1){
+                disableNotifications.setText("Desactivar notificaciones");
+            }
+            else {
+                disableNotifications.setText("Activar notificaciones");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
         return root;
     }

@@ -22,6 +22,7 @@
     <string name="mood">Pareces estar un poco estresado.</string>
     <string name="recommendation">Te recomiendo los siguiente:</string>
     <string name="hello">Buenas, {username}</string>
+    <string name="save">guardar datos</string>
 
 
 </resources>

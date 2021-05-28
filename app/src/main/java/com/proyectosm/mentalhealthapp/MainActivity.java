@@ -4,15 +4,13 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.icu.util.Calendar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.TextView;
-
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -24,6 +22,8 @@ import com.proyectosm.mentalhealthapp.notifications.Notificacion_nocturna;
 import com.proyectosm.mentalhealthapp.ui.initialconfig.InitialconfigActivity;
 import com.proyectosm.mentalhealthapp.ui.settings.SettingsFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +31,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-
-import org.jetbrains.annotations.NotNull;
-
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -59,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
-
 
         // Se inicializa la barra de configuración y se le asignan los distintos fragments
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -106,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 
 
     public static void setNotifications(int h, int m, int id, boolean toggle, Context context) {

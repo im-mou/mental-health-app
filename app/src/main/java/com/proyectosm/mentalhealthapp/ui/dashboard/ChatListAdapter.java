@@ -29,7 +29,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatModel> {
 
         // Comprueba si hay otra view
         if (convertView == null) {
-            if(chatModel.left) {
+            if(chatModel.left == true) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_left_item, null, false);
             } else {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_right_item, null, false);

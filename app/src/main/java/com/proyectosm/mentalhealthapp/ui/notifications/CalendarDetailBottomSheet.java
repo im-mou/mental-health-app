@@ -11,17 +11,19 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.proyectosm.mentalhealthapp.DatesUtils;
 import com.proyectosm.mentalhealthapp.R;
+import com.proyectosm.mentalhealthapp.ui.dashboard.ChatModel;
+import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 
 import java.util.ArrayList;
 
 public class CalendarDetailBottomSheet extends BottomSheetDialogFragment {
     // Variables iniciales para crear el objeto calendario
     private int position;
-    private NotificationsFragment.JournalModel journalEntry;
+    private JournalModel journalEntry;
 
 
     // Inicializa los datos de posición y calendario
-    public CalendarDetailBottomSheet(int position, NotificationsFragment.JournalModel journalEntry) {
+    public CalendarDetailBottomSheet(int position, JournalModel journalEntry) {
         super();
         this.position = position;
         this.journalEntry = journalEntry;
@@ -47,13 +49,13 @@ public class CalendarDetailBottomSheet extends BottomSheetDialogFragment {
 
         // Se crea la lista del calendario vacía
         ListView listView = (ListView) sheetView.findViewById(R.id.calendar_dates_list);
-        ArrayList<NotificationsFragment.ChatModel> arrayOfJournalEntries = new ArrayList<NotificationsFragment.ChatModel>();
+        ArrayList<ChatModel> arrayOfJournalEntries = new ArrayList<ChatModel>();
 
         // y se rellena de datos con las entradas que recibe
         CalendarDetailListAdapter calendarDetailListAdapter = new CalendarDetailListAdapter(getActivity(), arrayOfJournalEntries);
         listView.setAdapter(calendarDetailListAdapter);
 
-        calendarDetailListAdapter.addAll(journalEntry.chat);
+        calendarDetailListAdapter.addAll(journalEntry.getChat());
 
         return sheetView;
     }

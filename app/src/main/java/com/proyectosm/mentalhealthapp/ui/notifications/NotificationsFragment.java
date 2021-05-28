@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.proyectosm.mentalhealthapp.DatesUtils;
 import com.proyectosm.mentalhealthapp.R;
 import com.proyectosm.mentalhealthapp.databinding.FragmentNotificationsBinding;
+import com.proyectosm.mentalhealthapp.ui.dashboard.JournalModel;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -44,36 +45,6 @@ public class NotificationsFragment extends Fragment {
 
     private ListView listView;
     OkHttpClient client;
-
-    public class ChatModel {
-        int journal_id;
-        int type;
-        String body;
-
-        public ChatModel(int journal_id, int type, String body) {
-            this.journal_id = journal_id;
-            this.type = type;
-            this.body = body;
-        }
-    }
-
-    public class JournalModel {
-        int journal_id;
-        int user_id;
-        String date;
-        String color;
-        double sentiment_index;
-        ChatModel[] chat;
-
-        public JournalModel(int journal_id, int user_id, String date, String color, double sentiment_index, ChatModel[] chat) {
-            this.journal_id = journal_id;
-            this.user_id = user_id;
-            this.date = date;
-            this.color = color;
-            this.sentiment_index = sentiment_index;
-            this.chat = chat;
-        }
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -106,9 +77,7 @@ public class NotificationsFragment extends Fragment {
                 DatesUtils parsedDate = new DatesUtils(changeDate);
                 title_month.setText(parsedDate.getMonth() + ", " + parsedDate.getYear());
                 title_today_date.setText("Hoy es " + parsedDate.getHumanDate());
-//
-//                JournalModel[] jsonData = getCalendarData(notificationsViewModel.getCurrentDate().getValue());
-//                notificationsViewModel.setJournalJsonData(jsonData);
+
             }
         });
 
@@ -117,8 +86,6 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable JournalModel[] jsonData) {
                 // For populating list data
-//                calendarRecyclerAdapter.clear();
-//                calendarRecyclerAdapter.addAll(jsonData);
             }
         });
 

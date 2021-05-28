@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,11 @@ import com.proyectosm.mentalhealthapp.UserModel2;
 import com.proyectosm.mentalhealthapp.databinding.FragmentSettingsBinding;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -93,24 +99,53 @@ public class SettingsFragment extends Fragment {
                 String tmpName = name.getEditText().getText().toString();
                 String tmpSleep = sleepHours.getEditText().getText().toString();
 
-                RequestBody formBody = new FormBody.Builder()
-                        .add("token", token)
-                        .add("name", tmpName)
-                        .add("sleep_time", tmpSleep)
-                        .build();
+                boolean nombreBien = true;
+                if(tmpName.length() == 0) {
+                    nombreBien = false;
+                    Toast.makeText(getContext(), "El nombre está vacío", Toast.LENGTH_SHORT).show();
+                }
 
-                Request request = new Request.Builder()
-                        .url(getResources().getString(R.string.api_url)+"/user/update")
-                        .post(formBody)
-                        .build();
+                boolean fechaBien = false;
+                if(tmpSleep.length() == 5){
+                    if(tmpSleep.charAt(0) >= '0' && tmpSleep.charAt(0) <= '2') {
+                        if(tmpSleep.charAt(1) >= '0' && tmpSleep.charAt(1) <= '4') {
+                            if(tmpSleep.charAt(2) == ':') {
+                                if(tmpSleep.charAt(3) >= '0' && tmpSleep.charAt(3) <= '5'){
+                                    if(tmpSleep.charAt(4) >= '0' && tmpSleep.charAt(4) <= '9') {
+                                        fechaBien = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
 
-                // Hacemos una peticion al servidor cloud para registrar el usuario
-                try (Response response = client.newCall(request).execute()) {
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                    Toast.makeText(getContext(), "Datos guardados", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(fechaBien) {
+                    if(nombreBien){
+                        RequestBody formBody = new FormBody.Builder()
+                                .add("token", token)
+                                .add("name", tmpName)
+                                .add("sleep_time", tmpSleep)
+                                .build();
+
+                        Request request = new Request.Builder()
+                                .url(getResources().getString(R.string.api_url)+"/user/update")
+                                .post(formBody)
+                                .build();
+
+
+                        // Hacemos una peticion al servidor cloud para registrar el usuario
+                        try (Response response = client.newCall(request).execute()) {
+                            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                            Toast.makeText(getContext(), "Datos guardados", Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(getContext(), "La fecha está mal", Toast.LENGTH_SHORT).show();
                 }
             }
         });

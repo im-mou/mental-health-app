@@ -144,8 +144,8 @@ public class SettingsFragment extends Fragment {
                             getUserinfo(token);
 
                             if(currentUser.isNotifications() == 1) {
-                                Toast.makeText(getContext(), currentUser.getSleep_time().substring(0, 2), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getContext(), currentUser.getSleep_time().substring(3, 5), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), currentUser.getSleep_time().substring(0, 2), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(), currentUser.getSleep_time().substring(3, 5), Toast.LENGTH_SHORT).show();
 
                                 setNotifications(Integer.parseInt(currentUser.getSleep_time().substring(0, 2)), Integer.parseInt(currentUser.getSleep_time().substring(3, 5)), 55, true, getContext());
                             }

@@ -113,16 +113,16 @@ public class MainActivity extends AppCompatActivity {
         Calendar calendar_d1 = Calendar.getInstance();
         Calendar calendar_n = Calendar.getInstance();
 
-        int h1 = h-4, h2 = h-8;
+        int h1 = h-6, h2 = h-12;
 
-        if (h <= 8) {
-            h2 = 24-(8-h);
-            if (h <= 4)
-                h1 = 24-(4-h);
+        if (h <= 12) {
+            h2 = 24-(12-h);
+            if (h <= 6)
+                h1 = 24-(6-h);
         }
 
         // Establece las horas que se recibirán las notificaciones
-        calendar_d.set(Calendar.HOUR_OF_DAY, h);
+        calendar_d.set(Calendar.HOUR_OF_DAY, h2);
         calendar_d.set(Calendar.MINUTE, m);
         calendar_d.set(Calendar.SECOND, 0);
 
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         calendar_d1.set(Calendar.MINUTE, m);
         calendar_d1.set(Calendar.SECOND, 0);
 
-        calendar_n.set(Calendar.HOUR_OF_DAY, h2);
+        calendar_n.set(Calendar.HOUR_OF_DAY, h);
         calendar_n.set(Calendar.MINUTE, m);
         calendar_n.set(Calendar.SECOND, 0);
 

@@ -89,6 +89,7 @@ public class InitialconfigActivity extends AppCompatActivity {
             }
         });
 
+
         // escuchamos el click al boton del "empezar"
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override

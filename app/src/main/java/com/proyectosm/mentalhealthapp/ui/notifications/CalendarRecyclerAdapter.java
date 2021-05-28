@@ -23,12 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecyclerAdapter.MyViewHolder> {
 
-    CalendarModel[] calendar;
+    NotificationsFragment.JournalModel[] journal;
     Context context;
     ViewModelProvider notificationsViewModel;
 
-    public CalendarRecyclerAdapter(Context context, CalendarModel[] calendar) {
-        this.calendar = calendar;
+    public CalendarRecyclerAdapter(Context context, NotificationsFragment.JournalModel[] journal) {
+        this.journal = journal;
         this.context = context;
     }
 
@@ -45,10 +45,10 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
     // Interpretamos la información de la lista e introducimos los elemntos en el calendario
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
-        String dateDay = new DatesUtils(calendar[position].date).getDay();
+        String dateDay = new DatesUtils(journal[position].date).getDay();
 
         holder.textViewDate.setText(String.valueOf(dateDay));
-        holder.textViewColor.setBackgroundColor(Color.parseColor(calendar[position].color));
+        holder.textViewColor.setBackgroundColor(Color.parseColor(journal[position].color));
 
         // Remarca la entrada 'hoy' poniéndole un marco de color
         if(Integer.parseInt(dateDay)  == LocalDate.now().getDayOfMonth()) {
@@ -58,7 +58,7 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         }
 
         // En función del sentiment analizado colocaría un texto
-        if(calendar[position].sentiment_index == 0 && position + 1  < LocalDate.now().getDayOfMonth()) {
+        if(journal[position].sentiment_index == 0 && position + 1  < LocalDate.now().getDayOfMonth()) {
             holder.textViewColor.setText("Vacío");
         } else {
             holder.textViewColor.setText("");
@@ -68,11 +68,11 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarModel CalendarEntry = calendar[position];
+                NotificationsFragment.JournalModel JournalEntry = journal[position];
 
                 FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
 
-                CalendarDetailBottomSheet sheet = new CalendarDetailBottomSheet(position, CalendarEntry);
+                CalendarDetailBottomSheet sheet = new CalendarDetailBottomSheet(position, JournalEntry);
                 sheet.show(manager, "calender_detail_sheet");
             }
         });
@@ -80,7 +80,7 @@ public class CalendarRecyclerAdapter extends RecyclerView.Adapter<CalendarRecycl
 
     @Override
     public int getItemCount() {
-        return calendar.length;
+        return journal.length;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

@@ -39,7 +39,11 @@ public class InitialconfigModel extends ViewModel {
         }
 
         // eliminamos el primer pipe
-        return activeInterests.substring(1);
+        if (activeInterests == "") {
+            return "";
+        } else {
+            return activeInterests.substring(1);
+        }
     }
 
 }

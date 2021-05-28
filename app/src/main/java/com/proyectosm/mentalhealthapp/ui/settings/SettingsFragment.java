@@ -107,15 +107,20 @@ public class SettingsFragment extends Fragment {
                         .post(formBody)
                         .build();
 
-                if(currentUser.isNotifications() == 1) {
-                    setNotifications(3, Integer.parseInt(currentUser.getSleep_time()), 55, true, getContext());
-                }
 
                     // Hacemos una peticion al servidor cloud para registrar el usuario
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                     Toast.makeText(getContext(), "Datos guardados", Toast.LENGTH_SHORT).show();
                     getUserinfo(token);
+
+                    if(currentUser.isNotifications() == 1) {
+                        Toast.makeText(getContext(), currentUser.getSleep_time().substring(0, 2), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), currentUser.getSleep_time().substring(3, 5), Toast.LENGTH_SHORT).show();
+
+                        setNotifications(Integer.parseInt(currentUser.getSleep_time().substring(0, 2)), Integer.parseInt(currentUser.getSleep_time().substring(3, 5)), 55, true, getContext());
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -157,7 +162,7 @@ public class SettingsFragment extends Fragment {
 
 
                            Toast.makeText(getContext(), currentUser.getSleep_time(), Toast.LENGTH_SHORT).show();
-                           setNotifications(3, Integer.parseInt(currentUser.getSleep_time()), 55, toggle, getContext());
+                           setNotifications(Integer.parseInt(currentUser.getSleep_time().substring(0, 2)), Integer.parseInt(currentUser.getSleep_time().substring(3, 5)), 55, toggle, getContext());
 
                        }
                    } catch (IOException e) {

@@ -54,14 +54,17 @@ public class DashboardFragment extends Fragment {
     // Chat de ejemplo
     private ChatModel[] chatrecord;
 
+    OkHttpClient client;
+    ChatListAdapter chatsListAdapter;
+    String token, text;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
         // hace la llamada al servidor para obtener los datos
-        OkHttpClient client = new OkHttpClient();
+        client = new OkHttpClient();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -73,12 +76,12 @@ public class DashboardFragment extends Fragment {
         ArrayList<ChatModel> arrayOfChatEntries = new ArrayList<ChatModel>();
 
         // Recibe los chatModels y carga los datos
-        ChatListAdapter chatsListAdapter = new ChatListAdapter(getActivity(), arrayOfChatEntries);
+        chatsListAdapter = new ChatListAdapter(getActivity(), arrayOfChatEntries);
         listView.setAdapter(chatsListAdapter);
 
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
+        token = sharedPreferences.getString("token", "");
 
         RequestBody formBody = new FormBody.Builder()
                 .add("token", token)
@@ -212,6 +215,45 @@ public class DashboardFragment extends Fragment {
                 return false;
             }
         });
+
+        btnEnviar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                // Al soltar el dedo finaliza
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    updateText(token, client, chatsListAdapter, stateGrabacion.getText().toString());
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void updateText(String token, OkHttpClient client, ChatListAdapter chatsListAdapter, String text) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", token)
+                .add("text", text)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getResources().getString(R.string.api_url)+"/journal/insert")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            Gson gson = new Gson();
+            ChatModel[] chatModel = gson.fromJson(response.body().string(), ChatModel[].class);
+
+            chatsListAdapter.clear();
+            chatsListAdapter.addAll(chatModel);
+            chatsListAdapter.notifyDataSetChanged();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

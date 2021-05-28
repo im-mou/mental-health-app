@@ -75,14 +75,17 @@ public class MainActivity extends AppCompatActivity {
         setNotifications(22, 0, 0, 55);
 
         // comprobar que las entradas de los journals ya existen en la base de datos
-        gnerateJournalEntries(token);
+        generateJournalEntries();
     }
 
-    private void gnerateJournalEntries(String token) {
+    private void generateJournalEntries() {
         OkHttpClient client = new OkHttpClient();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
 
         RequestBody formBody = new FormBody.Builder()
                 .add("token", token)

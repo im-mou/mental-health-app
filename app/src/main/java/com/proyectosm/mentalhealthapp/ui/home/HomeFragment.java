@@ -40,19 +40,16 @@ public class HomeFragment extends Fragment {
     private String rec_title[] = {
             "Netflix",
             "Meditación",
-            "Haz un poco de ejercicio",
     };
 
     private String rec_description[] = {
             "¿Qué tal si descansas un poco y ves una de estas series...?\n",
             "Estas técnicas de meditación seguro que te ayudan a calmarte...",
-            "Hacer ejercicio te puede relajar",
     };
 
     private Uri rec_images[] = {
             Uri.parse("https://nementio.com/wp-content/uploads/netflix-new-icon.png"),
             Uri.parse("https://lh3.googleusercontent.com/proxy/A7YjlD6bQYMIKuRzIonnq2C-5d2VssmsgbeuhPKlrVtlrZFztOxyZRWRWTNIi29hZB1YLQiVYqlW-s7WlSJT-fxNNjmFHn4arBHA"),
-            Uri.parse("https://media.istockphoto.com/vectors/heart-isometric-health-care-concept-red-shape-and-heartbeat-vector-id1183325543?k=6&m=1183325543&s=612x612&w=0&h=DT5m64-MJl2mJto4eBd9UiWVR_52h9PI5E9QB7nMGa0="),
     };
 
     public View onCreateView(@NonNull LayoutInflater inflater,

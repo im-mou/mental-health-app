@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Establece las horas que se recibirán las notificaciones
-        calendar_d.set(Calendar.HOUR_OF_DAY, h2);
+        calendar_d.set(Calendar.HOUR_OF_DAY, h);
         calendar_d.set(Calendar.MINUTE, m);
         calendar_d.set(Calendar.SECOND, 0);
 
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         calendar_d1.set(Calendar.MINUTE, m);
         calendar_d1.set(Calendar.SECOND, 0);
 
-        calendar_n.set(Calendar.HOUR_OF_DAY, h);
+        calendar_n.set(Calendar.HOUR_OF_DAY, h2);
         calendar_n.set(Calendar.MINUTE, m);
         calendar_n.set(Calendar.SECOND, 0);
 

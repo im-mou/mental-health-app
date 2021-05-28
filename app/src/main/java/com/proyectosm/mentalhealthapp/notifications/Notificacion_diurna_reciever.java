@@ -22,17 +22,17 @@ public class Notificacion_diurna_reciever extends BroadcastReceiver {
 
         // Botón de respuesta 1 sentiment = mal
         Intent broadcastIntent = new Intent(context, Notificacion_diurna_action.class);
-        broadcastIntent.putExtra("emotion", "mal");
+        broadcastIntent.putExtra("emotion", 0.0);
         PendingIntent actionIntent = PendingIntent.getBroadcast(context, 1, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Botón de respuesta 2 sentiment = normal
         Intent broadcastIntent1 = new Intent(context, Notificacion_diurna_action.class);
-        broadcastIntent1.putExtra("emotion", "normal");
+        broadcastIntent1.putExtra("emotion", 0.5);
         PendingIntent actionIntent1 = PendingIntent.getBroadcast(context, 2, broadcastIntent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Botón de respuesta 3 sentiment = bien
         Intent broadcastIntent2 = new Intent(context, Notificacion_diurna_action.class);
-        broadcastIntent2.putExtra("emotion", "bien");
+        broadcastIntent2.putExtra("emotion", 1.0);
         PendingIntent actionIntent2 = PendingIntent.getBroadcast(context, 3, broadcastIntent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Se crea la notificación con sus variables importantes (titulo, cuerpo, botones...)
